@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Waste Map</title>
+  <meta name="description" content="Waste map is an application that will privide the citizens of the City of Detroit with information about their various waste pick up dates.">
+  <meta name="author" content="Edgar Montes & Dexter Slursarski">
+  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' />
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.29.0/mapbox-gl.css' rel='stylesheet' />
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.css' type='text/css' />
+  <link href='assets/css/styles.v1.css' rel='stylesheet' />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.js'></script>
+  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.29.0/mapbox-gl.js"></script>
+  <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
+  <link href='assets/css/fullcalendar.min.css' rel='stylesheet' />
+  <link href='assets/css/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+  <link href='assets/css/style.v1.css' rel='stylesheet' />
+  <script src='assets/js/moment.min.js'></script>
+  <script src='assets/js/jquery.min.js'></script>
+  <script src='assets/js/fullcalendar.min.js'></script>
+</head>
+<body>
+  <main>
+    <section id="info">
+      <section class="info-container">
+        <input type="hidden" name="route-id" value="">
+        <input type="hidden" name="lng" value="">
+        <input type="hidden" name="lat" value="">
+        <article class="street-name"></article>
+        <article class="calendar">
+          <article><img src="assets/img/calendar.png" alt="calendar"> <span>MY SCHEDULE</span></article>
+        </article>
+        <article class="subscribe">
+          <div id="reminder-form" accept-charset="UTF-8" method="post">
+            <article class="services-check-list">
+              <section class="service-check">
+                <input id="garbage-checkbox" type="checkbox" name="trash" value="" checked="true">
+                <label for="garbage-checkbox">Garbage</label>
+              </section>
+              <section class="service-check">
+                <input id="recycle-checkbox" type="checkbox" name="recycling" value="" checked="true">
+                <label for="recycle-checkbox">Recycle</label>
+              </section>
+              <section class="service-check">
+                <input id="bulk-yard-checkbox" type="checkbox" name="bulk" value="" checked="true">
+                <label for="bulk-yard-checkbox">Bulk/Yard Waste</label>
+              </section>
+            </article>
+            <label for="phone-number"><img class="required" src="https://public.govdelivery.com/static/required.gif" alt="Required" />Phone:</label>
+            <input type="text" name="phone-number" id="phone-number" placeholder="(313)333-3333" onkeyup="phoneFormater(this)"/>
+            <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
+            <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-validation-alert">&times;</span></div>
+            <button name="commit" value="Submit" class="form_button">SIGN ME UP FOR REMINDERS</button>
+          </div>
+        </article>
+        <article class="provider"></article>
+        <article class="garbage"></article>
+        <article class="recycle"></article>
+        <article class="bulk"></article>
+        <article class="yard"></article>
+        <!-- <article class="district"></article> -->
+        <article id="close-emergency-modal-btn">
+          <img src="assets/img/error.png" alt="close"></img>
+        </article>
+      </section>
+    </section>
+    <section id="box-calendar" class="">
+      <section id='calendar'></section>
+      <section class='leyend'>
+        <article>
+          <span>ssss</span> Garbage pick up
+        </article>
+        <article>
+          <span>ssss</span> Recycle pick up
+        </article>
+        <article>
+          <span>ssss</span> Bulk pick up
+        </article>
+        <article>
+          <span>ssss</span> Yard waste pick up
+        </article>
+      </section>
+      <section id="emergency-modal" class="">
+        <section class="emergency-container">
+          <article id="close-emergency-modal-btn-2">
+            <img src="assets/img/error.png" alt="close"></img>
+          </article>
+          <p><strong>Normal Date:</strong> <span id='emergency-normal-date'></span></p>
+          <p><strong>Reschedule Date:</strong> <span id='emergency-new-date'></span></p>
+          <p id="emergency-message"></p>
+        </section>
+      </section>
+      <article id="back-to-infor-btn">
+        <article class="triangle"></article>
+        <article class="back-text">
+          BACK
+        </article>
+      </article>
+    </section>
+    <div id='legend'>
+      <strong>GARBAGE PICK UP DAY</strong>
+      <nav class='legend clearfix'>
+        <span style='background:#377eb8;'></span>
+        <span style='background:#4daf4a;'></span>
+        <span style='background:#984ea3;'></span>
+        <span style='background:#ff7f00;'></span>
+        <span style='background:#e41a1c;'></span>
+        <label>Monday</label>
+        <label>Tuesday</label>
+        <label>Wednesday</label>
+        <label>Thursday</label>
+        <label>Friday</label>
+      </nav>
+    </div>
+    <nav id='filter-group' class='filter-group'>
+      <input type="checkbox" id="trash-layer-button">
+      <label for="trash-layer-button">Garbage</label>
+      <input type="checkbox" id="recycle-layer-button">
+      <label for="recycle-layer-button">Recycle</label>
+      <input type="checkbox" id="bulk-layer-button">
+      <label for="bulk-layer-button">Bulk/Yard</label>
+      <input type="checkbox" id="road-layer-button">
+      <label for="road-layer-button">Road Maintenance</label>
+    </nav>
+    <section id='map'></section>
+    <section id='mobile-geocoder'></section>
+  </main>
+  <script src='assets/js/map.js'></script>
+  <script src="assets/js/module.event.js"></script>
+  <script src='assets/js/map_section_click_module.js'></script>
+</body>
+</html>

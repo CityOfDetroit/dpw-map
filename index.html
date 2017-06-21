@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Waste Map</title>
+  <meta name="description" content="Waste map is an application that will privide the citizens of the City of Detroit with information about their various waste pick up dates.">
+  <meta name="author" content="Edgar Montes & Dexter Slursarski">
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.29.0/mapbox-gl.css' rel='stylesheet' />
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.css' type='text/css' />
+  <link href='assets/css/styles.v1.css' rel='stylesheet' />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.js'></script>
+  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.29.0/mapbox-gl.js"></script>
+  <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
+</head>
+<body>
+  <main>
+    <section id="info">
+      <section class="info-container">
+        <article class="street-name"></article>
+        <article class="provider"></article>
+        <article class="garbage"></article>
+        <article class="recycle"></article>
+        <article class="bulk"></article>
+        <article class="note">
+          <span>Note</span>
+          <strong>"A" Week</strong> - Every other week bulk and yard waste collection starting the week of Februay 28
+          <br><br><strong>"B" Week</strong> - Every other week bulk and yard waste collection starting the week of February 21
+          <br><br>*For more information check the calendar to get your next pick up date.
+        </article>
+        <article class="subscribe">
+          <form id="GD-snippet-form" action="https://public.govdelivery.com/accounts/MIDETROIT/subscribers/qualify" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="u6RmhC/hjJ33ZTmBM6mUjwZ5fWbubyuPz8AjyN1+Fw6KpN9XgdmT3U+O9tkLVSNhdYuO2dI7wyvu/lnXE8b5dg==" />
+          <input type="hidden" name="topic_id" id="topic_id" value="MIDETROIT_94" />
+          <label for="email"><img class="required" src="https://public.govdelivery.com/static/required.gif" alt="Required" />Email:</label>
+          <input type="text" name="email" id="email" class="long" />
+          <button name="commit" value="Submit" class="form_button">Register for Alerts</button>
+          </form>
+        </article>
+        <article id="close-emergency-modal-btn">
+          <img src="assets/img/error.png" alt="close"></img>
+        </article>
+      </section>
+    </section>
+    <section id='map'></section>
+  </main>
+  <script src='assets/js/map.js'></script>
+  <script src='assets/js/map_section_click_module.js'></script>
+</body>
+</html>
