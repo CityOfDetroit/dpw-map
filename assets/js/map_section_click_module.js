@@ -58,7 +58,7 @@ var mapSectionClickModule = (function(calendarEvents){
           let todaysMonth =  moment().month() + 1;
           let todaysYear = moment().year();
           $.ajax({
-            url : 'http://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+            url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
             type : 'GET',
             dataType:'json',
             success : function(response) {
@@ -142,7 +142,7 @@ var mapSectionClickModule = (function(calendarEvents){
       //======================== pick up services ==================
       $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/DPW/All_Services/MapServer/0/query?where=&text=&objectIds=&time=&geometry='+e.lngLat.lng+'%2C+'+e.lngLat.lat+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson' , function( data ) {
         console.log(data);
-        document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://www.advanceddisposal.com/mi/detroit/detroit-residential-collection" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - (844) 233-8764';
+        document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="https://www.advanceddisposal.com/mi/detroit/detroit-residential-collection" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - (844) 233-8764';
         // document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day);
         // document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(data.features[1].attributes.day) + '-' + capitalizeFirstLetter(data.features[1].attributes.week);
         // document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(data.features[2].attributes.day) + '-' + capitalizeFirstLetter(data.features[2].attributes.week);
@@ -157,7 +157,7 @@ var mapSectionClickModule = (function(calendarEvents){
         let todaysMonth =  moment().month() + 1;
         let todaysYear = moment().year();
         $.ajax({
-          url : 'http://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+          url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
           type : 'GET',
           dataType:'json',
           success : function(response) {
