@@ -304,7 +304,7 @@ var calendarEvents = (function(){
     var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xhr.open('POST', url);
     xhr.onload  = function() {
-      if (xhr.readyState>3 && xhr.status==200) {
+      if (xhr.readyState>3 && xhr.status==201) {
         console.log('xhr success');
         success(xhr.responseText);
       }else{
