@@ -201,7 +201,8 @@ map.on('load', function(window) {
           document.querySelector('.info-container > .street-name').innerHTML = document.querySelector('.mapboxgl-ctrl-geocoder.mapboxgl-ctrl > input').value.split(',')[0];
           document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://www.advanceddisposal.com/mi/detroit/detroit-residential-collection" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - (844) 233-8764';
           $.ajax({
-            url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+            // TODO change this to https
+            url : 'http://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
             type : 'GET',
             dataType:'json',
             success : function(response) {
@@ -223,7 +224,8 @@ map.on('load', function(window) {
           document.querySelector('.info-container > .street-name').innerHTML = document.querySelector('.mapboxgl-ctrl-geocoder.mapboxgl-ctrl > input').value.split(',')[0];
           document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://gflusa.com/residential/detroit/" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - (844) 464-3587';
           $.ajax({
-            url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID  + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+            // TODO change this to https
+            url : 'http://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID  + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
             type : 'GET',
             dataType:'json',
             success : function(response) {

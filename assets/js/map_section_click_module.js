@@ -58,7 +58,8 @@ var mapSectionClickModule = (function(calendarEvents){
           let todaysMonth =  moment().month() + 1;
           let todaysYear = moment().year();
           $.ajax({
-            url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+            // TODO change this to https
+            url : 'http://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
             type : 'GET',
             dataType:'json',
             success : function(response) {
@@ -157,7 +158,8 @@ var mapSectionClickModule = (function(calendarEvents){
         let todaysMonth =  moment().month() + 1;
         let todaysYear = moment().year();
         $.ajax({
-          url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+          // TODO change this to https
+          url : 'http://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
           type : 'GET',
           dataType:'json',
           success : function(response) {

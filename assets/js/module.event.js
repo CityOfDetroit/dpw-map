@@ -210,7 +210,8 @@ var calendarEvents = (function(){
     addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Bulk',listOfEvents.bulk);
     //console.log(events);
     $.ajax({
-        url : 'https://apis.detroitmi.gov/waste_schedule/details/' + routeIDs + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+        // TODO change this to https
+        url : 'http://apis.detroitmi.gov/waste_schedule/details/' + routeIDs + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
         type : 'GET',
         dataType:'json',
         success : function(response) {
