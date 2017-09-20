@@ -78,12 +78,12 @@ var calendarEvents = (function(){
   }
   var addEventToList = function addeEventToList(year,weeks,eventType,eventInfo,startDate, endDate) {
     // Add garbage pickup day every week
-    //console.log(year);
-    //console.log(weeks);
-    //console.log(eventType);
-    //console.log(eventInfo);
-    //console.log(startDate);
-    //console.log(endDate);
+    console.log(year);
+    console.log(weeks);
+    console.log(eventType);
+    console.log(eventInfo);
+    console.log(startDate);
+    console.log(endDate);
     for (var i = 1; i < weeks; i++) {
       let title = eventType + ' pick up';
       let eventObj = {
@@ -358,9 +358,9 @@ var calendarEvents = (function(){
           'latitude' :  document.querySelector('.info-container > input[name="lat"]').value,
           'longitude' : document.querySelector('.info-container > input[name="lng"]').value
         };
-        //console.log(data);
+        console.log(data);
         sendSignUpRequest('https://apis.detroitmi.gov/waste_notifier/subscribe/', data, function(response){
-            //console.log(response);
+            console.log(response);
             document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
         });
       }else{
@@ -373,7 +373,7 @@ var calendarEvents = (function(){
     }
   };
   var closePhoneValidationAlert = function closePhoneValidationAlert(alertBox){
-    alertBo////consolet.parentNode.className = alertBox.target.parentNode.className.split(' ')[0];
+    alertBox.target.parentNode.className = alertBox.target.parentNode.className.split(' ')[0];
   };
   // document.querySelectorAll('.close-phone-validation-alert').forEach(function(item){
   //   item.addEventListener('click', function(b){
