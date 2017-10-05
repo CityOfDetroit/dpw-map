@@ -210,7 +210,6 @@ var calendarEvents = (function(){
     addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Bulk',listOfEvents.bulk);
     //console.log(events);
     $.ajax({
-        // TODO change this to https
         url : 'http://apis.detroitmi.gov/waste_schedule/details/' + routeIDs + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
         type : 'GET',
         dataType:'json',
@@ -305,7 +304,7 @@ var calendarEvents = (function(){
     var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xhr.open('POST', url);
     xhr.onload  = function() {
-      if (xhr.readyState>3 && xhr.status==201) {
+      if (xhr.readyState>3 && Math.trunc(xhr.status / 100) == 2) {
         console.log('xhr success');
         success(xhr.responseText);
       }else{
