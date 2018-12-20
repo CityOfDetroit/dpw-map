@@ -210,7 +210,11 @@ map.on('load', function(window) {
               document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.trash.next_pickup).format('MMM Do');
               document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(data.features[1].attributes.day) + ' - ' + moment(response.next_pickups.recycling.next_pickup).format('MMM Do');
               document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(data.features[2].attributes.day) + ' - ' + moment(response.next_pickups.bulk.next_pickup).format('MMM Do');
-              document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(data.features[2].attributes.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
+              if(response.next_pickups['yard waste'] != undefined){
+                document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
+              }else{
+                document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> Suspended';
+              }
             }
           });
           document.querySelector('.info-container > input[name="route-id"]').value = data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID;
@@ -230,10 +234,15 @@ map.on('load', function(window) {
             dataType:'json',
             success : function(response) {
               console.log(response);
+
               document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.trash.next_pickup).format('MMM Do');
               document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.recycling.next_pickup).format('MMM Do');
               document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.bulk.next_pickup).format('MMM Do');
-              document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
+              if(response.next_pickups['yard waste'] != undefined){
+                document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
+              }else{
+                document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> Suspended';
+              }
             }
           });
           document.querySelector('.info-container > input[name="route-id"]').value = data.features[0].attributes.FID;
