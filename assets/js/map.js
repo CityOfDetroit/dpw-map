@@ -8,14 +8,12 @@ var map = new mapboxgl.Map({
   style: 'mapbox://styles/slusarskiddetroitmi/ciymfavyb00072sqe0bu9rwht', //stylesheet location
   center: [-83.1, 42.36], // starting position
   zoom: 10.5, // starting zoom
-  maxBounds: bounds
 });
-map['dragPan'].disable();
 map.on('load', function(window) {
   // use waste districts
   map.addSource('waste', {
     type: 'geojson',
-    data: 'https://gis.detroitmi.gov/arcgis/rest/services/DPW/All_Services/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=5&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=geojson'
+    data: 'https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=geojson'
   });
 
   map.addSource('trash', {
@@ -54,10 +52,7 @@ map.on('load', function(window) {
       "fill-color": '#377eb8',
       "fill-opacity": 0,
     },
-    "filter": ["==", "contractor", "advanced"],
-    "filter": ["==", "services", "trash"],
-    "filter": ["==", "services", "recycle"],
-    "filter": ["==", "services", "bulk"]
+    "filter": ["==", "contractor", "advance"]
   });
   map.addLayer({
     "id": "gfl-fill",
@@ -76,7 +71,7 @@ map.on('load', function(window) {
   map.addLayer({
     "id": "trash-monday",
     "type": "fill",
-    "source": "trash",
+    "source": "waste",
     "layout": {},
     "paint": {
       "fill-color": '#377eb8',
@@ -88,7 +83,7 @@ map.on('load', function(window) {
   map.addLayer({
     "id": "trash-tuesday",
     "type": "fill",
-    "source": "trash",
+    "source": "waste",
     "layout": {},
     "paint": {
       "fill-color": '#4daf4a',
@@ -100,7 +95,7 @@ map.on('load', function(window) {
   map.addLayer({
     "id": "trash-wednesday",
     "type": "fill",
-    "source": "trash",
+    "source": "waste",
     "layout": {},
     "paint": {
       "fill-color": '#984ea3',
@@ -112,7 +107,7 @@ map.on('load', function(window) {
   map.addLayer({
     "id": "trash-thursday",
     "type": "fill",
-    "source": "trash",
+    "source": "waste",
     "layout": {},
     "paint": {
       "fill-color": '#ff7f00',
@@ -124,7 +119,7 @@ map.on('load', function(window) {
   map.addLayer({
     "id": "trash-friday",
     "type": "fill",
-    "source": "trash",
+    "source": "waste",
     "layout": {},
     "paint": {
       "fill-color": '#e41a1c',
@@ -137,7 +132,7 @@ map.on('load', function(window) {
   map.addLayer({
     "id": "trash-lines",
     "type": "line",
-    "source": "trash",
+    "source": "waste",
     "layout": {},
     "paint": {
       "line-color": "#FFFFFF",
@@ -149,10 +144,11 @@ map.on('load', function(window) {
     bbox: [
         -83.3437,42.2102,
         -82.8754, 42.5197
-      ]
+      ],
+    marker: false,
+    placeholder: 'Type your street address.',
   });
   map.addControl(geocoder, 'top-left');
-  document.querySelector('.mapboxgl-ctrl-geocoder input[type="text"]').placeholder = "Type your street address.";
   map.addSource('single-point', {
       "type": "geojson",
       "data": {
@@ -171,7 +167,7 @@ map.on('load', function(window) {
       }
   });
   geocoder.on('result', function(ev) {
-      console.log(ev.result.geometry);
+      // console.log(ev.result.geometry);
       let tempAddr = document.querySelector('.mapboxgl-ctrl-geocoder.mapboxgl-ctrl > input').value.split(',')[0];
       tempAddr = tempAddr.split(' ');
       let newTempAddr = '';
@@ -180,7 +176,7 @@ map.on('load', function(window) {
         newTempAddr += item;
         ((index < size) && (index + 1) !== size) ? newTempAddr += '+': 0;
       });
-      console.log(newTempAddr);
+      // console.log(newTempAddr);
       //=================== street sweeping ========================
       // $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/DPW/Weeks/MapServer/0/query?where=&text=&objectIds=&time=&geometry='+ev.result.geometry.coordinates[0]+'%2C+'+ev.result.geometry.coordinates[1]+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson' , function( data ) {
       //   console.log(data.features[0].attributes.VISIBLE);
@@ -191,101 +187,42 @@ map.on('load', function(window) {
       // });
       //================ pick up services ==========================
       $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/DPW/All_Services/MapServer/0/query?where=&text=&objectIds=&time=&geometry='+ev.result.geometry.coordinates[0]+'%2C+'+ev.result.geometry.coordinates[1]+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson' , function( data ) {
-        console.log(data);
-        console.log(ev.result.geometry);
+        // console.log(data);
+        // console.log(ev.result.geometry);
         map.getSource('single-point').setData(ev.result.geometry);
         let todaysMonth =  moment().month() + 1;
         let todaysYear = moment().year();
-        if(data.features.length > 1){
-          console.log('new layout');
-          document.querySelector('.info-container > .street-name').innerHTML = document.querySelector('.mapboxgl-ctrl-geocoder.mapboxgl-ctrl > input').value.split(',')[0];
-          document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://www.advanceddisposal.com/mi/detroit/detroit-residential-collection" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - (844) 233-8764';
-          $.ajax({
-            // TODO change this to https
-            url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
-            type : 'GET',
-            dataType:'json',
-            success : function(response) {
-              console.log(response);
-              document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.trash.next_pickup).format('MMM Do');
-              document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(data.features[1].attributes.day) + ' - ' + moment(response.next_pickups.recycling.next_pickup).format('MMM Do');
-              document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(data.features[2].attributes.day) + ' - ' + moment(response.next_pickups.bulk.next_pickup).format('MMM Do');
-              if(response.next_pickups['yard waste'] != undefined){
-                document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
-              }else{
-                document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> Suspended';
-              }
-            }
-          });
-          document.querySelector('.info-container > input[name="route-id"]').value = data.features[0].attributes.FID + ',' + data.features[1].attributes.FID + ',' + data.features[2].attributes.FID;
-          document.querySelector('.service-check > #garbage-checkbox').value = data.features[0].attributes.FID;
-          document.querySelector('.service-check > #recycle-checkbox').value = data.features[1].attributes.FID;
-          document.querySelector('.service-check > #bulk-yard-checkbox').value = data.features[2].attributes.FID;
-          document.querySelector('.info-container > input[name="lng"]').value = ev.result.geometry.coordinates[0];
-          document.querySelector('.info-container > input[name="lat"]').value = ev.result.geometry.coordinates[1];
-          (document.querySelector('#info').className === 'active') ? 0 : document.querySelector('#info').className = 'active';
+        document.querySelector('.info-container > .street-name').innerHTML = document.querySelector('.mapboxgl-ctrl-geocoder.mapboxgl-ctrl > input').value.split(',')[0];
+        if(data.features[0].attributes.contractor == 'advance'){
+          document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="https://www.advanceddisposal.com/mi/detroit/detroit-residential-collection" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - <a href="tel:844-233-8764">(844) 233-8764</a>';
         }else{
-          document.querySelector('.info-container > .street-name').innerHTML = document.querySelector('.mapboxgl-ctrl-geocoder.mapboxgl-ctrl > input').value.split(',')[0];
-          document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://gflusa.com/residential/detroit/" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - (844) 464-3587';
-          $.ajax({
-            // TODO change this to https
-            url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID  + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
-            type : 'GET',
-            dataType:'json',
-            success : function(response) {
-              console.log(response);
-
-              document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.trash.next_pickup).format('MMM Do');
-              document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.recycling.next_pickup).format('MMM Do');
-              document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.bulk.next_pickup).format('MMM Do');
-              if(response.next_pickups['yard waste'] != undefined){
-                document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
-              }else{
-                document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> Suspended';
-              }
-            }
-          });
-          document.querySelector('.info-container > input[name="route-id"]').value = data.features[0].attributes.FID;
-          document.querySelector('.service-check > #garbage-checkbox').value = data.features[0].attributes.FID;
-          document.querySelector('.service-check > #recycle-checkbox').value = data.features[0].attributes.FID;
-          document.querySelector('.service-check > #bulk-yard-checkbox').value = data.features[0].attributes.FID;
-          document.querySelector('.info-container > input[name="lng"]').value = ev.result.geometry.coordinates[0];
-          document.querySelector('.info-container > input[name="lat"]').value = ev.result.geometry.coordinates[1];
-          (document.querySelector('#info').className === 'active') ? 0 : document.querySelector('#info').className = 'active';
+          document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://gflusa.com/residential/detroit/" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - <a href="tel:844-464-3587">(844) 464-3587</a>';
         }
-      //   $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/NeighborhoodsApp/council_district/MapServer/1/query?where=&text=&objectIds=&time=&geometry='+ev.result.geometry.coordinates[0]+'%2C+'+ev.result.geometry.coordinates[1]+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson' , function( data ) {
-      //     console.log(data.features[0].attributes.districts);
-      //     let tempHtml = '<span>District ' + data.features[0].attributes.districts + '</span> ';
-      //     switch (data.features[0].attributes.districts) {
-      //       case '1':
-      //         tempHtml += 'Council: <a href="http://www.detroitmi.gov/Government/City-Council/James-Tate" target="_new">James Tate</a><br>District Manager: <a href="http://www.detroitmi.gov/Neighborhoods#dt-district1" target="_new"> Stephanie Young</a>';
-      //         break;
-      //
-      //       case '2':
-      //         tempHtml += 'Council: <a href="http://www.detroitmi.gov/Government/City-Council/George-Cushingberry" target="_new">George Cushingberry Jr.</a><br>District Manager: <a href="http://www.detroitmi.gov/Neighborhoods#dt-district2" target="_new"> Kim Tandy</a>';
-      //         break;
-      //
-      //       case '3':
-      //         tempHtml += 'Council: <a href="http://www.detroitmi.gov/Government/City-Council/Scott-Benson" target="_new">Scott Benson</a><br>District Manager: <a href="http://www.detroitmi.gov/Neighborhoods#dt-district3" target="_new"> Erinn Harris</a>';
-      //         break;
-      //
-      //       case '4':
-      //         tempHtml += 'Council: <a href="http://www.detroitmi.gov/Government/City-Council/Andre-Spivey" target="_new">André L. Spivey</a><br>District Manager: <a href="http://www.detroitmi.gov/Neighborhoods#dt-district4" target="_new"> Letty Azar</a>';
-      //         break;
-      //
-      //       case '5':
-      //         tempHtml += 'Council: <a href="http://www.detroitmi.gov/Government/City-Council/Mary-Sheffield" target="_new">Mary Sheffield</a><br>District Manager: <a href="http://www.detroitmi.gov/Neighborhoods#dt-district5" target="_new"> Vince Keenan</a>';
-      //         break;
-      //
-      //       case '6':
-      //         tempHtml += 'Council: <a href="http://www.detroitmi.gov/Government/City-Council/Raquel-Castaneda-Lopez" target="_new">Raquel Castañeda-López</a><br>District Manager: <a href="http://www.detroitmi.gov/Neighborhoods#dt-district6" target="_new"> Ray Solomon II</a>';
-      //         break;
-      //
-      //       default:
-      //         tempHtml += 'Council: <a href="http://www.detroitmi.gov/Government/City-Council/Gabe-Leland" target="_new">Gabe Leland</a><br>District Manager: <a href="http://www.detroitmi.gov/Neighborhoods#dt-district7" target="_new"> Ray Solomon II</a>';
-      //     }
-      //     document.querySelector('.info-container > .district').innerHTML = tempHtml;
-      //   });
+        $.ajax({
+          // TODO change this to https
+          url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID  + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+          type : 'GET',
+          dataType:'json',
+          success : function(response) {
+            // console.log(response);
+
+            document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.trash.next_pickup).format('MMM Do');
+            document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.recycling.next_pickup).format('MMM Do');
+            document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.bulk.next_pickup).format('MMM Do');
+            if(response.next_pickups['yard waste'] != undefined){
+              document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
+            }else{
+              document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> Suspended';
+            }
+          }
+        });
+        document.querySelector('.info-container > input[name="route-id"]').value = data.features[0].attributes.FID;
+        document.querySelector('.service-check > #garbage-checkbox').value = data.features[0].attributes.FID;
+        document.querySelector('.service-check > #recycle-checkbox').value = data.features[0].attributes.FID;
+        document.querySelector('.service-check > #bulk-yard-checkbox').value = data.features[0].attributes.FID;
+        document.querySelector('.info-container > input[name="lng"]').value = ev.result.geometry.coordinates[0];
+        document.querySelector('.info-container > input[name="lat"]').value = ev.result.geometry.coordinates[1];
+        (document.querySelector('#info').className === 'active') ? 0 : document.querySelector('#info').className = 'active';
       });
   });
   document.getElementById('trash-layer-button').checked = true;
@@ -293,8 +230,8 @@ map.on('load', function(window) {
 var closeInfo = function closeInfo() {
   (document.querySelector('#info').className === 'active') ? document.querySelector('#info').className = '' : document.querySelector('#info').className = 'active';
   map.flyTo({
-      center: [-83.1, 42.367],
-      zoom: 11.05,
+      center: [-83.1, 42.36], // starting position
+      zoom: 10.5, // starting zoom
       bearing: 0,
 
       // These options control the flight curve, making it move
@@ -314,9 +251,9 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 var toggleMapLayers = function toggleMapLayers(e){
-  console.log(e);
-  console.log(e.target.id);
-  console.log(e.target.checked);
+  // console.log(e);
+  // console.log(e.target.id);
+  // console.log(e.target.checked);
   if(e.target.id == 'trash-layer-button'){
     if(e.target.checked === false){
       e.target.checked = true;
@@ -354,7 +291,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "trash-monday",
         "type": "fill",
-        "source": "trash",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#377eb8',
@@ -366,7 +303,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "trash-tuesday",
         "type": "fill",
-        "source": "trash",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#4daf4a',
@@ -378,7 +315,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "trash-wednesday",
         "type": "fill",
-        "source": "trash",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#984ea3',
@@ -390,7 +327,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "trash-thursday",
         "type": "fill",
-        "source": "trash",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#ff7f00',
@@ -402,7 +339,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "trash-friday",
         "type": "fill",
-        "source": "trash",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#e41a1c',
@@ -415,7 +352,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "trash-lines",
         "type": "line",
-        "source": "trash",
+        "source": "waste",
         "layout": {},
         "paint": {
           "line-color": "#FFFFFF",
@@ -468,7 +405,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "recycle-monday",
         "type": "fill",
-        "source": "recycle",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#377eb8',
@@ -480,7 +417,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "recycle-tuesday",
         "type": "fill",
-        "source": "recycle",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#4daf4a',
@@ -492,7 +429,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "recycle-wednesday",
         "type": "fill",
-        "source": "recycle",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#984ea3',
@@ -504,7 +441,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "recycle-thursday",
         "type": "fill",
-        "source": "recycle",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#ff7f00',
@@ -516,7 +453,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "recycle-friday",
         "type": "fill",
-        "source": "recycle",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#e41a1c',
@@ -529,7 +466,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "recycle-lines",
         "type": "line",
-        "source": "recycle",
+        "source": "waste",
         "layout": {},
         "paint": {
           "line-color": "#FFFFFF",
@@ -582,7 +519,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "bulk-monday",
         "type": "fill",
-        "source": "bulk",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#377eb8',
@@ -594,7 +531,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "bulk-tuesday",
         "type": "fill",
-        "source": "bulk",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#4daf4a',
@@ -606,7 +543,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "bulk-wednesday",
         "type": "fill",
-        "source": "bulk",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#984ea3',
@@ -618,7 +555,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "bulk-thursday",
         "type": "fill",
-        "source": "bulk",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#ff7f00',
@@ -630,7 +567,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "bulk-friday",
         "type": "fill",
-        "source": "bulk",
+        "source": "waste",
         "layout": {},
         "paint": {
           "fill-color": '#e41a1c',
@@ -643,7 +580,7 @@ var toggleMapLayers = function toggleMapLayers(e){
       map.addLayer({
         "id": "bulk-lines",
         "type": "line",
-        "source": "bulk",
+        "source": "waste",
         "layout": {},
         "paint": {
           "line-color": "#FFFFFF",
@@ -661,11 +598,11 @@ var toggleMapLayers = function toggleMapLayers(e){
       });
     }
   }else{
-    console.log('detecting road');
+    // console.log('detecting road');
     if(e.target.checked === false){
       e.target.checked = true;
     }else{
-      console.log('activate roads');
+      // console.log('activate roads');
       if(document.getElementById('trash-layer-button').checked){
         map.removeLayer('trash-lines');
         map.removeLayer('trash-monday');

@@ -271,13 +271,13 @@ var calendarEvents = (function(){
       newTempAddr += item;
       ((index < size) && (index + 1) !== size) ? newTempAddr += '+': 0;
     });
-    console.log(newTempAddr);
-    console.log(routeIDs);
+    // console.log(newTempAddr);
+    // console.log(routeIDs);
     let lng = document.querySelector('.info-container > input[name="lng"]').value;
     let lat = document.querySelector('.info-container > input[name="lat"]').value;
-    console.log('lng:' + lng + ', lat:' + lat);
-    $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/DPW/All_Services/MapServer/0/query?where=&objectIds=&time=&geometry='+lng+'%2C+'+lat+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson' , function( data , window) {
-      console.log(data);
+    // console.log('lng:' + lng + ', lat:' + lat);
+    $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0/query?where=&objectIds=&time=&geometry='+lng+'%2C+'+lat+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson' , function( data , window) {
+      // console.log(data);
       startCalendar(data, routeIDs);
     });
   };
@@ -300,15 +300,15 @@ var calendarEvents = (function(){
     var params = typeof data == 'string' ? data : Object.keys(data).map(
             function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]); }
         ).join('&');
-    console.log(params);
+    // console.log(params);
     var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xhr.open('POST', url);
     xhr.onload  = function() {
       if (xhr.readyState>3 && Math.trunc(xhr.status / 100) == 2) {
-        console.log('xhr success');
+        // console.log('xhr success');
         success(xhr.responseText);
       }else{
-        console.log('xhr error');
+        // console.log('xhr error');
         document.querySelector('.invalid-phone-error-message').innerHTML = 'There was an error with your request. Please try again.';
         document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
       }
@@ -323,15 +323,15 @@ var calendarEvents = (function(){
   };
   var stripPhoneNumber = function stripPhoneNumber(number){
     let newNumber = '';
-    console.log(number.split('('));
+    // console.log(number.split('('));
     newNumber = number.split('(')[1];
-    console.log(newNumber);
-    console.log(newNumber.split(')'));
+    // console.log(newNumber);
+    // console.log(newNumber.split(')'));
     newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
-    console.log(newNumber);
-    console.log(newNumber.split('-'));
+    // console.log(newNumber);
+    // console.log(newNumber.split('-'));
     newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
-    console.log(newNumber);
+    // console.log(newNumber);
     return newNumber;
   }
   var checkIfPhoneValid = function checkIfPhoneValid(){
@@ -348,7 +348,7 @@ var calendarEvents = (function(){
           servicesSignup += serviceCheckList[i].name + ',';
         }
       }
-      console.log(routeIDs);
+      // console.log(routeIDs);
       if(routeIDs !== ''){
         let data = {
           'phone_number'  : phoneNumber,
@@ -358,9 +358,9 @@ var calendarEvents = (function(){
           'latitude' :  document.querySelector('.info-container > input[name="lat"]').value,
           'longitude' : document.querySelector('.info-container > input[name="lng"]').value
         };
-        console.log(data);
+        // console.log(data);
         sendSignUpRequest('https://apis.detroitmi.gov/waste_notifier/subscribe/', data, function(response){
-            console.log(response);
+            // console.log(response);
             document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
         });
       }else{

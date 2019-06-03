@@ -7,13 +7,13 @@
   <meta name="description" content="Waste map is an application that will privide the citizens of the City of Detroit with information about their various waste pick up dates.">
   <meta name="author" content="Edgar Montes &amp; Dexter Slursarski">
   <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' />
-  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.29.0/mapbox-gl.css' rel='stylesheet' />
-  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.css' type='text/css' />
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.3.0/mapbox-gl-geocoder.css' type='text/css' />
   <link href='assets/css/styles.v1.css' rel='stylesheet' />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.js'></script>
-  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.29.0/mapbox-gl.js"></script>
-  <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.3.0/mapbox-gl-geocoder.min.js'></script>
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
+  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
   <link href='assets/css/fullcalendar.min.css' rel='stylesheet' />
   <link href='assets/css/fullcalendar.print.min.css' rel='stylesheet' media='print' />
   <link href='assets/css/style.v1.css' rel='stylesheet' />
@@ -116,11 +116,11 @@
     </div>
     <nav id='filter-group' class='filter-group'>
       <input type="checkbox" id="trash-layer-button">
-      <label for="trash-layer-button">Garbage</label>
+      <label for="trash-layer-button">Waste</label>
       <input type="checkbox" id="recycle-layer-button">
-      <label for="recycle-layer-button">Recycle</label>
+      <!-- <label for="recycle-layer-button">Recycle</label>
       <input type="checkbox" id="bulk-layer-button">
-      <label for="bulk-layer-button">Bulk/Yard</label>
+      <label for="bulk-layer-button">Bulk/Yard</label> -->
       <input type="checkbox" id="road-layer-button">
       <label for="road-layer-button">Road Maintenance</label>
     </nav>
