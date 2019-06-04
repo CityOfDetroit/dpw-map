@@ -13,8 +13,6 @@ var mapSectionClickModule = (function(calendarEvents){
       };
       // console.log(tempPoint);
       map.getSource('single-point').setData(tempPoint);
-      let feature = features[0];
-      // console.log(feature);
       map.flyTo({
           center: [e.lngLat.lng, e.lngLat.lat],
           zoom: 14,
@@ -46,36 +44,33 @@ var mapSectionClickModule = (function(calendarEvents){
         document.querySelector('.info-container > .street-name').innerHTML = data.features[0].place_name.split(',')[0];
       });
       //======================== pick up services ==================
-      $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0/query?where=&text=&objectIds=&time=&geometry='+e.lngLat.lng+'%2C+'+e.lngLat.lat+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson' , function( data ) {
-        // console.log(data);
-        if(data.features[0].attributes.contractor == 'advance'){
-          document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="https://www.advanceddisposal.com/mi/detroit/detroit-residential-collection" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - <a href="tel:844-233-8764">(844) 233-8764</a>';
-        }else{
-          document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://gflusa.com/residential/detroit/" target="_new">' + capitalizeFirstLetter(data.features[0].attributes.contractor) + '</a> - <a href="tel:844-464-3587">(844) 464-3587</a>';
+      if(features[0].properties.contractor == 'advance'){
+        document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="https://www.advanceddisposal.com/mi/detroit/detroit-residential-collection" target="_new">' + capitalizeFirstLetter(features[0].properties.contractor) + '</a> - <a href="tel:844-233-8764">(844) 233-8764</a>';
+      }else{
+        document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://gflusa.com/residential/detroit/" target="_new">' + capitalizeFirstLetter(features[0].properties.contractor) + '</a> - <a href="tel:844-464-3587">(844) 464-3587</a>';
+      }
+      
+      document.querySelector('.info-container > input[name="route-id"]').value = features[0].properties.FID;
+      document.querySelector('.service-check > #garbage-checkbox').value = features[0].properties.FID;
+      document.querySelector('.service-check > #recycle-checkbox').value = features[0].properties.FID;
+      document.querySelector('.service-check > #bulk-yard-checkbox').value = features[0].properties.FID;
+      document.querySelector('.info-container > input[name="lng"]').value = e.lngLat.lng;
+      document.querySelector('.info-container > input[name="lat"]').value = e.lngLat.lat;
+      (document.querySelector('#info').className === 'active') ? 0 : document.querySelector('#info').className = 'active';
+      let todaysMonth =  moment().month() + 1;
+      let todaysYear = moment().year();
+      $.ajax({
+        // TODO change this to https
+        url : 'https://apis.detroitmi.gov/waste_schedule/details/' + features[0].properties.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+        type : 'GET',
+        dataType:'json',
+        success : function(response) {
+          // console.log(response);
+          document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(features[0].properties.day) + ' - ' + moment(response.next_pickups.trash.next_pickup).format('MMM Do');
+          document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(features[0].properties.day) + ' - ' + moment(response.next_pickups.recycling.next_pickup).format('MMM Do');
+          document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(features[0].properties.day) + ' - ' + moment(response.next_pickups.bulk.next_pickup).format('MMM Do');
+          document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(features[0].properties.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
         }
-        
-        document.querySelector('.info-container > input[name="route-id"]').value = data.features[0].attributes.FID;
-        document.querySelector('.service-check > #garbage-checkbox').value = data.features[0].attributes.FID;
-        document.querySelector('.service-check > #recycle-checkbox').value = data.features[0].attributes.FID;
-        document.querySelector('.service-check > #bulk-yard-checkbox').value = data.features[0].attributes.FID;
-        document.querySelector('.info-container > input[name="lng"]').value = e.lngLat.lng;
-        document.querySelector('.info-container > input[name="lat"]').value = e.lngLat.lat;
-        (document.querySelector('#info').className === 'active') ? 0 : document.querySelector('#info').className = 'active';
-        let todaysMonth =  moment().month() + 1;
-        let todaysYear = moment().year();
-        $.ajax({
-          // TODO change this to https
-          url : 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
-          type : 'GET',
-          dataType:'json',
-          success : function(response) {
-            // console.log(response);
-            document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.trash.next_pickup).format('MMM Do');
-            document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.recycling.next_pickup).format('MMM Do');
-            document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups.bulk.next_pickup).format('MMM Do');
-            document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(data.features[0].attributes.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
-          }
-        });
       });
     }else{
       console.log('No data on point');
