@@ -34,21 +34,12 @@ var calendarEvents = (function(){
         "endDate": null
       }
     };
-    if(data.features.length > 1){
-      tempEventObject.recycling.dayOfWeek = data.features[1].attributes.day;
-      tempEventObject.recycling.AorB = data.features[1].attributes.week;
-      tempEventObject.bulk.dayOfWeek = data.features[2].attributes.day;
-      tempEventObject.bulk.AorB = data.features[2].attributes.week;
-      tempEventObject.yard.dayOfWeek = data.features[2].attributes.day;
-      tempEventObject.yard.AorB = data.features[2].attributes.week;
-    }else{
-      tempEventObject.recycling.dayOfWeek = data.features[0].attributes.day;
-      tempEventObject.recycling.AorB = data.features[0].attributes.week;
-      tempEventObject.bulk.dayOfWeek = data.features[0].attributes.day;
-      tempEventObject.bulk.AorB = data.features[0].attributes.week;
-      tempEventObject.yard.dayOfWeek = data.features[0].attributes.day;
-      tempEventObject.yard.AorB = data.features[0].attributes.week;
-    }
+    tempEventObject.recycling.dayOfWeek = data.features[0].attributes.day;
+    tempEventObject.recycling.AorB = data.features[0].attributes.week;
+    tempEventObject.bulk.dayOfWeek = data.features[0].attributes.day;
+    tempEventObject.bulk.AorB = data.features[0].attributes.week;
+    tempEventObject.yard.dayOfWeek = data.features[0].attributes.day;
+    tempEventObject.yard.AorB = data.features[0].attributes.week;
     return tempEventObject;
   };
   function getWeekNumber(d) {
@@ -78,12 +69,12 @@ var calendarEvents = (function(){
   }
   var addEventToList = function addeEventToList(year,weeks,eventType,eventInfo,startDate, endDate) {
     // Add garbage pickup day every week
-    console.log(year);
-    console.log(weeks);
-    console.log(eventType);
-    console.log(eventInfo);
-    console.log(startDate);
-    console.log(endDate);
+    // console.log(year);
+    // console.log(weeks);
+    // console.log(eventType);
+    // console.log(eventInfo);
+    // console.log(startDate);
+    // console.log(endDate);
     for (var i = 1; i < weeks; i++) {
       let title = eventType + ' pick up';
       let eventObj = {
@@ -119,32 +110,32 @@ var calendarEvents = (function(){
       }else{
         if(startDate !== undefined){
           if(moment(eventObj.start).isBetween(startDate, endDate)){
-            if((year % 2) !== 0){
+            if((parseInt(moment(eventObj.start).format('YYYY')) % 2) !== 0){
               if(eventInfo.AorB === 'a'){
-                ((i % 2) === 0) ? events.push(eventObj): 0;
+                (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
               }else{
-                ((i % 2) !== 0) ? events.push(eventObj): 0;
+                (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
               }
             }else{
               if(eventInfo.AorB === 'a'){
-                ((i % 2) !== 0) ? events.push(eventObj): 0;
+                (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
               }else{
-                ((i % 2) === 0) ? events.push(eventObj): 0;
+                (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
               }
             }
           }
         }else{
-          if((year % 2) !== 0){
+          if((parseInt(moment(eventObj.start).format('YYYY')) % 2) !== 0){
             if(eventInfo.AorB === 'a'){
-              ((i % 2) === 0) ? events.push(eventObj): 0;
+              (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
             }else{
-              ((i % 2) !== 0) ? events.push(eventObj): 0;
+              (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
             }
           }else{
             if(eventInfo.AorB === 'a'){
-              ((i % 2) !== 0) ? events.push(eventObj): 0;
+              (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
             }else{
-              ((i % 2) === 0) ? events.push(eventObj): 0;
+              (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
             }
           }
         }
@@ -199,22 +190,23 @@ var calendarEvents = (function(){
     document.getElementById('emergency-modal').className = '';
   };
   var startCalendar = function startCalendar(sendData, routeIDs) {
-    console.log(sendData);
+    // console.log(sendData);
     var listOfEvents = createEventObject(sendData);
-    console.log(listOfEvents);
-    console.log(year);
+    // console.log(listOfEvents);
+    // console.log(year);
     let todaysMonth =  moment().month() + 1;
     let todaysYear = moment().year();
     addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Garbage',listOfEvents.trash);
     addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Recycle',listOfEvents.recycling);
     addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Bulk',listOfEvents.bulk);
-    //console.log(events);
+    // console.log(todaysMonth);
+    // console.log(todaysYear);
     $.ajax({
         url : 'https://apis.detroitmi.gov/waste_schedule/details/' + routeIDs + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
         type : 'GET',
         dataType:'json',
         success : function(response) {
-          console.log(response);
+          // console.log(response);
           let yardWasteStart = null;
           let yardWasteEnd = null;
           response.details.forEach(function(item){
