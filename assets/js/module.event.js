@@ -111,13 +111,13 @@ var calendarEvents = (function(){
         if(startDate !== undefined){
           if(moment(eventObj.start).isBetween(startDate, endDate)){
             if((parseInt(moment(eventObj.start).format('YYYY')) % 2) !== 0){
-              if(eventInfo.AorB === 'a'){
+              if(eventInfo.AorB === 'b'){
                 (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
               }else{
                 (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
               }
             }else{
-              if(eventInfo.AorB === 'a'){
+              if(eventInfo.AorB === 'b'){
                 (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
               }else{
                 (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
@@ -126,13 +126,13 @@ var calendarEvents = (function(){
           }
         }else{
           if((parseInt(moment(eventObj.start).format('YYYY')) % 2) !== 0){
-            if(eventInfo.AorB === 'a'){
+            if(eventInfo.AorB === 'b'){
               (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
             }else{
               (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
             }
           }else{
-            if(eventInfo.AorB === 'a'){
+            if(eventInfo.AorB === 'b'){
               (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
             }else{
               (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
