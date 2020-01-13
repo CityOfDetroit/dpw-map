@@ -4,9 +4,10 @@ var calendarEvents = (function(){
   var events = [];
   var year = moment().year();
   var createEventObject = function createEventObject(data) {
+    console.log ("data from line 7 " , data)
     let  tempEventObject = {
       'trash': {
-        "dayOfWeek": data.features[0].attributes.day,
+        "dayOfWeek": data.next_pickups.trash.day,
         "schedule": "weekly",
         "AorB": null,
         "startDate": null,
@@ -33,14 +34,22 @@ var calendarEvents = (function(){
         "startDate": null,
         "endDate": null
       }
+      
     };
-    tempEventObject.recycling.dayOfWeek = data.features[0].attributes.day;
-    tempEventObject.recycling.AorB = data.features[0].attributes.week;
-    tempEventObject.bulk.dayOfWeek = data.features[0].attributes.day;
-    tempEventObject.bulk.AorB = data.features[0].attributes.week;
-    tempEventObject.yard.dayOfWeek = data.features[0].attributes.day;
-    tempEventObject.yard.AorB = data.features[0].attributes.week;
-    return tempEventObject;
+    console.log("data.next_pickups.trash.day"+ data.next_pickups.recycling.week);
+    tempEventObject.recycling.dayOfWeek = data.next_pickups.recycling.day;
+    tempEventObject.recycling.AorB = data.next_pickups.recycling.week;
+    tempEventObject.recycling.startDate = data.next_pickups.recycling.next_pickup;
+
+    tempEventObject.bulk.dayOfWeek = data.next_pickups.bulk.day;
+    tempEventObject.bulk.AorB = data.next_pickups.bulk.week;
+    tempEventObject.bulk.startDate = data.next_pickups.bulk.next_pickup;
+
+    tempEventObject.trash.dayOfWeek = data.next_pickups.trash.day;
+    tempEventObject.trash.AorB = data.next_pickups.trash.week;
+    tempEventObject.trash.startDate = data.next_pickups.trash.next_pickup;
+console.log()
+        return tempEventObject;
   };
   function getWeekNumber(d) {
     // Copy date so don't modify original
@@ -51,6 +60,7 @@ var calendarEvents = (function(){
     d.setDate(d.getDate() + 4 - (d.getDay()||7));
     // Get first day of year
     var yearStart = new Date(d.getFullYear(),0,1);
+    console.log("new Date(d.getFullYear(),0,1)"+new Date(d.getFullYear(),0,1))
     // Calculate full weeks to nearest Thursday
     var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
     // Return array of year and week number
@@ -67,12 +77,15 @@ var calendarEvents = (function(){
     } while (week == 1);
     return week;
   }
+  function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+  }
   var addEventToList = function addeEventToList(year,weeks,eventType,eventInfo,startDate, endDate) {
     // Add garbage pickup day every week
     // console.log(year);
     // console.log(weeks);
     // console.log(eventType);
-    // console.log(eventInfo);
+    //  console.log("eventInfo ",eventInfo);
     // console.log(startDate);
     // console.log(endDate);
     for (var i = 1; i < weeks; i++) {
@@ -100,9 +113,10 @@ var calendarEvents = (function(){
         case 'Bulk':
             eventObj.color = '#114BC7';
               eventObj.start = moment().year(year).week(i).day(eventInfo.dayOfWeek).format("YYYY-MM-DD");
+              console.log('asd ', eventObj.start)
           break;
         default:
-
+console.log("addto list" + moment().year(year).week(i).day(eventInfo.dayOfWeek).format("YYYY-MM-DD"))
       }
       // console.log(eventObj);
       if(eventInfo.schedule === 'weekly'){
@@ -114,6 +128,7 @@ var calendarEvents = (function(){
               if(eventInfo.AorB === 'a'){
                 (parseInt(moment(eventObj.start).format('W') % 2) === 0) ? events.push(eventObj): 0;
               }else{
+                console.log("eventObj.start ",eventObj.start)
                 (parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj): 0;
               }
             }else{
@@ -190,17 +205,17 @@ var calendarEvents = (function(){
     document.getElementById('emergency-modal').className = '';
   };
   var startCalendar = function startCalendar(sendData, routeIDs) {
-    // console.log(sendData);
+     console.log("senddata", sendData);
     var listOfEvents = createEventObject(sendData);
-    // console.log(listOfEvents);
+    console.log("listOfEvents " , listOfEvents);
     // console.log(year);
     let todaysMonth =  moment().month() + 1;
     let todaysYear = moment().year();
+
     addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Garbage',listOfEvents.trash);
-    addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Recycle',listOfEvents.recycling);
-    addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Bulk',listOfEvents.bulk);
-    // console.log(todaysMonth);
-    // console.log(todaysYear);
+    addEventToList((year-1),(weeksInYear((year+1)) + weeksInYear(year) + weeksInYear((year+1))),'Recycle',listOfEvents.recycling);
+    addEventToList((year-1),(weeksInYear((year+1)) + weeksInYear(year) + weeksInYear((year+1))),'Bulk',listOfEvents.bulk);
+    // console.log( addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Bulk',listOfEvents.Bulk))
     $.ajax({
         url : 'https://apis.detroitmi.gov/waste_schedule/details/' + routeIDs + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
         type : 'GET',
@@ -213,14 +228,21 @@ var calendarEvents = (function(){
             if(item.service == 'yard waste'){
               switch (item.type) {
                 case 'end-date':
+                  listOfEvents.yard.endDate = item.newDay;
                   yardWasteEnd = item.newDay;
                   break;
                 default:
+                  listOfEvents.yard.startDate = item.newDay;
                   yardWasteStart = item.newDay;
               }
             }
           });
-          addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Yard waste',listOfEvents.yard, yardWasteStart, yardWasteEnd);
+        //  addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Yard waste',listOfEvents.yard);
+
+    console.log("garbage"+(weeksInYear((year+1))));
+     console.log(todaysMonth);
+     console.log(todaysYear);
+
           displayEmergencyEvent(response.details);
           if(firstLoadCalendar){
             $('#calendar').fullCalendar({
@@ -269,8 +291,23 @@ var calendarEvents = (function(){
     let lat = document.querySelector('.info-container > input[name="lat"]').value;
     // console.log('lng:' + lng + ', lat:' + lat);
     $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0/query?where=&objectIds=&time=&geometry='+lng+'%2C+'+lat+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson' , function( data , window) {
-      // console.log(data);
-      startCalendar(data, routeIDs);
+      console.log("start data ",data);
+      let todaysMonth =  moment().month() + 1;
+      let todaysYear = moment().year();
+      url = 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID  + '/year/' + todaysYear + '/month/' + todaysMonth + '/';
+      console.log("url from map ", url);
+      $.ajax({
+        // TODO change this to https
+        url : url,
+        type : 'GET',
+        dataType:'json',
+        success : function(response) {
+           console.log("response  ",response);
+           startCalendar(response, routeIDs); //startCalendar(data, routeIDs);
+
+        }
+      });
+
     });
   };
   var closeCalendar = function closeCalendar() {
