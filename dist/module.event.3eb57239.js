@@ -121,6 +121,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 var calendarEvents = function () {
   var firstLoadCalendar = true;
   var today = moment().format();
+  console.log("today", today);
   var events = [];
   var year = moment().year();
 
@@ -156,7 +157,6 @@ var calendarEvents = function () {
         "endDate": null
       }
     };
-    console.log("data.next_pickups.trash.day" + data.next_pickups.recycling.week);
     tempEventObject.recycling.dayOfWeek = data.next_pickups.recycling.day;
     tempEventObject.recycling.AorB = data.next_pickups.recycling.week;
     tempEventObject.recycling.startDate = data.next_pickups.recycling.next_pickup;
@@ -166,7 +166,6 @@ var calendarEvents = function () {
     tempEventObject.trash.dayOfWeek = data.next_pickups.trash.day;
     tempEventObject.trash.AorB = data.next_pickups.trash.week;
     tempEventObject.trash.startDate = data.next_pickups.trash.next_pickup;
-    console.log();
     return tempEventObject;
   };
 
@@ -209,7 +208,7 @@ var calendarEvents = function () {
     // console.log(year);
     // console.log(weeks);
     // console.log(eventType);
-    //  console.log("eventInfo ",eventInfo);
+    // console.log("eventInfo ",eventInfo);
     // console.log(startDate);
     // console.log(endDate);
     for (var i = 1; i < weeks; i++) {
@@ -238,7 +237,6 @@ var calendarEvents = function () {
         case 'Bulk':
           eventObj.color = '#114BC7';
           eventObj.start = moment().year(year).week(i).day(eventInfo.dayOfWeek).format("YYYY-MM-DD");
-          console.log('asd ', eventObj.start);
           break;
 
         default:
@@ -255,7 +253,7 @@ var calendarEvents = function () {
               if (eventInfo.AorB === 'a') {
                 parseInt(moment(eventObj.start).format('W') % 2) === 0 ? events.push(eventObj) : 0;
               } else {
-                console.log("eventObj.start ", eventObj.start)(parseInt(moment(eventObj.start).format('W') % 2) !== 0) ? events.push(eventObj) : 0;
+                parseInt(moment(eventObj.start).format('W') % 2) !== 0 ? events.push(eventObj) : 0;
               }
             } else {
               if (eventInfo.AorB === 'a') {
@@ -276,7 +274,8 @@ var calendarEvents = function () {
             if (eventInfo.AorB === 'a') {
               parseInt(moment(eventObj.start).format('W') % 2) !== 0 ? events.push(eventObj) : 0;
             } else {
-              parseInt(moment(eventObj.start).format('W') % 2) === 0 ? events.push(eventObj) : 0;
+              console.log("bulk differnce " + eventInfo.startDate + ' ' + moment(eventInfo.startDate).format('W') + "  " + moment(eventObj.start).format('W'), moment(eventInfo.startDate).format('W') - moment(eventObj.start).format('W'));
+              parseInt((moment(eventInfo.startDate).format('W') - moment(eventObj.start).format('W')) % 2) === 0 ? events.push(eventObj) : 0;
             }
           }
         }
@@ -371,13 +370,15 @@ var calendarEvents = function () {
             }
           }
         }); //  addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Yard waste',listOfEvents.yard);
+        // console.log("garbage"+(weeksInYear((year+1))));
+        //  console.log(todaysMonth);
+        //  console.log(todaysYear);
+        //console.log("events", events);
 
-        console.log("garbage" + weeksInYear(year + 1));
-        console.log(todaysMonth);
-        console.log(todaysYear);
         displayEmergencyEvent(response.details);
 
         if (firstLoadCalendar) {
+          console.log("events 1", events);
           $('#calendar').fullCalendar({
             customButtons: {
               printButton: {
@@ -401,6 +402,7 @@ var calendarEvents = function () {
           });
           firstLoadCalendar = false;
         } else {
+          console.log("events 2", events);
           $('#calendar').fullCalendar('addEventSource', events);
         }
       },
@@ -593,7 +595,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38977" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34179" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
