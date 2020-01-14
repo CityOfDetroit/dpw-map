@@ -1,17 +1,22 @@
-var mapSectionClickModule = (function(calendarEvents){
+var calendarEventsCompleted_Flag = 0;
+while(calendarEventsCompleted_Flag == 1){
+
+
+ var mapSectionClickModule = (
+  function(calendarEvents){
   map.on('click', function (e) {
-    // console.log(e);
+    console.log(e);
     var features = map.queryRenderedFeatures(e.point, { layers: ['advance-fill'] });
     if (!features.length) {
       features = map.queryRenderedFeatures(e.point, { layers: ['gfl-fill'] });
-      // console.log(features);
+      console.log(features);
     }
-    if (features.length) {
+    if (features.length > 0) {
       let tempPoint = {
         coordinates: [e.lngLat.lng, e.lngLat.lat],
         type: "Point"
       };
-      // console.log(tempPoint);
+       console.log(tempPoint);
       map.getSource('single-point').setData(tempPoint);
       map.flyTo({
           center: [e.lngLat.lng, e.lngLat.lat],
@@ -49,7 +54,7 @@ var mapSectionClickModule = (function(calendarEvents){
       }else{
         document.querySelector('.info-container > .provider').innerHTML = '<span>Provider:</span> <a href="http://gflusa.com/residential/detroit/" target="_new">' + capitalizeFirstLetter(features[0].properties.contractor) + '</a> - <a href="tel:844-464-3587">(844) 464-3587</a>';
       }
-      
+
       document.querySelector('.info-container > input[name="route-id"]').value = features[0].properties.FID;
       document.querySelector('.service-check > #garbage-checkbox').value = features[0].properties.FID;
       document.querySelector('.service-check > #recycle-checkbox').value = features[0].properties.FID;
@@ -62,15 +67,18 @@ var mapSectionClickModule = (function(calendarEvents){
       $.ajax({
         // TODO change this to https
         url : 'https://apis.detroitmi.gov/waste_schedule/details/' + features[0].properties.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/',
+
         type : 'GET',
         dataType:'json',
         success : function(response) {
+          console.log(url)
           // console.log(response);
           document.querySelector('.info-container > .garbage').innerHTML = '<span>Garbage:</span> ' + capitalizeFirstLetter(features[0].properties.day) + ' - ' + moment(response.next_pickups.trash.next_pickup).format('MMM Do');
           document.querySelector('.info-container > .recycle').innerHTML = '<span>Curbside Recycle:</span> ' + capitalizeFirstLetter(features[0].properties.day) + ' - ' + moment(response.next_pickups.recycling.next_pickup).format('MMM Do');
           document.querySelector('.info-container > .bulk').innerHTML = '<span>Bulk:</span> ' + capitalizeFirstLetter(features[0].properties.day) + ' - ' + moment(response.next_pickups.bulk.next_pickup).format('MMM Do');
           document.querySelector('.info-container > .yard').innerHTML = '<span>Yard Waste:</span> ' + capitalizeFirstLetter(features[0].properties.day) + ' - ' + moment(response.next_pickups['yard waste'].next_pickup).format('MMM Do');
         }
+
       });
     }else{
       console.log('No data on point');
@@ -78,3 +86,5 @@ var mapSectionClickModule = (function(calendarEvents){
     return;
   });
 })(window, calendarEvents);
+calendarEventsCompleted_Flag = 2;
+}
