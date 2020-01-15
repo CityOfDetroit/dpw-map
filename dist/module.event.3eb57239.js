@@ -120,13 +120,13 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"assets/js/module.event.js":[function(require,module,exports) {
 var calendarEvents = function () {
   var firstLoadCalendar = true;
-  var today = moment().format(); // console.log("today" , today)
+  var today = moment().format(); //console.log("today" , today)
 
   var events = [];
   var year = moment().year();
 
   var createEventObject = function createEventObject(data) {
-    // console.log ("data from line 7 " , data)
+    //  console.log ("data from line 7 " , data)
     var tempEventObject = {
       'trash': {
         "dayOfWeek": data.next_pickups.trash.day,
@@ -166,6 +166,8 @@ var calendarEvents = function () {
     tempEventObject.trash.dayOfWeek = data.next_pickups.trash.day;
     tempEventObject.trash.AorB = data.next_pickups.trash.week;
     tempEventObject.trash.startDate = data.next_pickups.trash.next_pickup;
+    tempEventObject.yard.dayOfWeek = data.next_pickups.trash.day;
+    tempEventObject.yard.AorB = data.next_pickups.trash.week;
     return tempEventObject;
   };
 
@@ -177,7 +179,7 @@ var calendarEvents = function () {
 
     d.setDate(d.getDate() + 4 - (d.getDay() || 7)); // Get first day of year
 
-    var yearStart = new Date(d.getFullYear(), 0, 1); // console.log("new Date(d.getFullYear(),0,1)"+new Date(d.getFullYear(),0,1))
+    var yearStart = new Date(d.getFullYear(), 0, 1); //console.log("new Date(d.getFullYear(),0,1)"+new Date(d.getFullYear(),0,1))
     // Calculate full weeks to nearest Thursday
 
     var weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7); // Return array of year and week number
@@ -239,7 +241,7 @@ var calendarEvents = function () {
           eventObj.start = moment().year(year).week(i).day(eventInfo.dayOfWeek).format("YYYY-MM-DD");
           break;
 
-        default: // console.log("addto list" + moment().year(year).week(i).day(eventInfo.dayOfWeek).format("YYYY-MM-DD"))
+        default: //console.log("addto list" + moment().year(year).week(i).day(eventInfo.dayOfWeek).format("YYYY-MM-DD"))
 
       } // console.log(eventObj);
 
@@ -274,7 +276,7 @@ var calendarEvents = function () {
             if (eventInfo.AorB === 'a') {
               parseInt(moment(eventObj.start).format('W') % 2) !== 0 ? events.push(eventObj) : 0;
             } else {
-              // console.log("bulk differnce " + eventInfo.startDate + ' '+moment(eventInfo.startDate).format('W') + "  " + moment(eventObj.start).format('W') , moment(eventInfo.startDate).format('W') - moment(eventObj.start).format('W')  );
+              //console.log("bulk differnce " + eventInfo.startDate + ' '+moment(eventInfo.startDate).format('W') + "  " + moment(eventObj.start).format('W') , moment(eventInfo.startDate).format('W') - moment(eventObj.start).format('W')  );
               parseInt((moment(eventInfo.startDate).format('W') - moment(eventObj.start).format('W')) % 2) === 0 ? events.push(eventObj) : 0;
             }
           }
@@ -338,8 +340,8 @@ var calendarEvents = function () {
   };
 
   var startCalendar = function startCalendar(sendData, routeIDs) {
-    //  console.log("senddata", sendData);
-    var listOfEvents = createEventObject(sendData); // console.log("listOfEvents " , listOfEvents);
+    //console.log("senddata", sendData);
+    var listOfEvents = createEventObject(sendData); //console.log("listOfEvents " , listOfEvents);
     // console.log(year);
 
     var todaysMonth = moment().month() + 1;
@@ -361,16 +363,16 @@ var calendarEvents = function () {
             switch (item.type) {
               case 'end-date':
                 listOfEvents.yard.endDate = item.newDay;
-                yardWasteEnd = item.newDay;
+                yardWasteStart = item.newDay;
                 break;
 
               default:
                 listOfEvents.yard.startDate = item.newDay;
-                yardWasteStart = item.newDay;
+                yardWasteEnd = item.newDay;
             }
           }
-        }); //  addEventToList((year-1),(weeksInYear((year-1)) + weeksInYear(year) + weeksInYear((year+1))),'Yard waste',listOfEvents.yard);
-        // console.log("garbage"+(weeksInYear((year+1))));
+        });
+        addEventToList(year - 1, weeksInYear(year - 1) + weeksInYear(year) + weeksInYear(year + 1), 'Yard waste', listOfEvents.yard, yardWasteStart, yardWasteEnd); // console.log("garbage"+(weeksInYear((year+1))));
         //  console.log(todaysMonth);
         //  console.log(todaysYear);
         //console.log("events", events);
@@ -378,7 +380,7 @@ var calendarEvents = function () {
         displayEmergencyEvent(response.details);
 
         if (firstLoadCalendar) {
-          // console.log("events 1", events);
+          //console.log("events 1", events);
           $('#calendar').fullCalendar({
             customButtons: {
               printButton: {
@@ -402,12 +404,11 @@ var calendarEvents = function () {
           });
           firstLoadCalendar = false;
         } else {
-          // console.log("events 2", events);
+          //console.log("events 2", events);
           $('#calendar').fullCalendar('addEventSource', events);
         }
       },
-      error: function error(request, _error) {
-        console.log("Request: " + JSON.stringify(request));
+      error: function error(request, _error) {//console.log("Request: "+JSON.stringify(request));
       }
     });
   };
@@ -427,10 +428,10 @@ var calendarEvents = function () {
     var lat = document.querySelector('.info-container > input[name="lat"]').value; // console.log('lng:' + lng + ', lat:' + lat);
 
     $.getJSON('https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0/query?where=&objectIds=&time=&geometry=' + lng + '%2C+' + lat + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson', function (data, window) {
-      // console.log("start data ",data);
+      //console.log("start data ",data);
       var todaysMonth = moment().month() + 1;
       var todaysYear = moment().year();
-      url = 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/'; // console.log("url from map ", url);
+      url = 'https://apis.detroitmi.gov/waste_schedule/details/' + data.features[0].attributes.FID + '/year/' + todaysYear + '/month/' + todaysMonth + '/'; //console.log("url from map ", url);
 
       $.ajax({
         // TODO change this to https
@@ -438,7 +439,7 @@ var calendarEvents = function () {
         type: 'GET',
         dataType: 'json',
         success: function success(response) {
-          //  console.log("response  ",response);
+          //console.log("response  ",response);
           startCalendar(response, routeIDs); //startCalendar(data, routeIDs);
         }
       });
@@ -483,7 +484,7 @@ var calendarEvents = function () {
 
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.addEventListener("error", function (e) {// console.log(e);
+    xhr.addEventListener("error", function (e) {//  console.log(e);
     });
     xhr.send(params);
     return xhr;
@@ -594,7 +595,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45729" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41677" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
