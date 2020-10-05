@@ -1,0 +1,22 @@
+{
+  "name": "DPWMap",
+  "version": "2.0.0",
+  "description": "Web map for identifying trash and recycling pick up dates.",
+  "main": "index.js",
+  "repository": "git@github.com:CityOfDetroit/DPWMap.git",
+  "author": " ",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel src/index.html --https --no-cache -p 3000 --open",
+    "test": "./node_modules/.bin/cypress open",
+    "build": "parcel build src/index.js --no-cache --public-url '.' --no-source-maps -d build"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-beta.1"
+  },
+  "dependencies": {
+    "esri-leaflet": "^2.5.0",
+    "leaflet": "^1.7.1",
+    "moment": "^2.29.0"
+  }
+}

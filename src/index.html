@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Esri Leaflet Test</title>
+  <meta name="description" content="App for finding waste pick up dates.">
+  <meta name="author" content="Edgar Montes">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <style>
+    html, body, #map {
+      margin:0; padding:0;  width : 100%; height : 100%;
+    }
+    #app{
+        position: relative;
+    }
+    #map{
+        width: 100vw;
+        height: 100vh;
+    }
+    #panel{
+        position: absolute;
+        top: 0;
+        left: -31em;
+        width: 30em;
+        height: 100vh;
+        background-color: #fff;
+        z-index: 1001;
+    }
+    #panel.active{
+        left: 0;
+    }
+  </style>
+</head>
+<body>
+
+<section id="app">
+    <article id="panel">
+        <button>x</button>
+        <div class="panel-box"></div>
+    </article>
+    <article id="map"></article>
+</section>
+
+<script src="index.js"></script>
+
+</body>
+</html>
