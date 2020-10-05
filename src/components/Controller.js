@@ -67,6 +67,7 @@ export default class Controller {
                     _controller.point = L.circle(e.latlng, userPoint).addTo(_controller.map);
                 }
                 _controller.map.flyTo(e.latlng, 15);
+                _controller.panel.currentProvider = featureCollection.features[0].properties.contractor;
                 console.log(featureCollection.features);
                 fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_controller.year}/month/${_controller.month}/`)
                 .then((res) => {
