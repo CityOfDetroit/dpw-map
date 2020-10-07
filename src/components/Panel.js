@@ -3,6 +3,10 @@ import SignForm from './SignForm';
 import './Panel.scss';
 export default class Panel {
     constructor() {
+        this.location = {
+            lat: null,
+            lng: null
+        };
         this.signup = new SignForm();
         this.currentProvider = null;
         this.providers = {

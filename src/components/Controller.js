@@ -73,6 +73,8 @@ export default class Controller {
                 .then((res) => {
                     res.json().then(data => {
                         console.log(data);
+                        _controller.panel.location.lat = e.latlng.lat;
+                        _controller.panel.location.lng = e.latlng.lng;
                         _controller.panel.data = data;
                         _controller.panel.createPanel(_controller.panel);
                         document.getElementById('panel').className = "active";

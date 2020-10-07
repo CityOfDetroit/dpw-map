@@ -12,6 +12,7 @@ export default class SignForm {
         input.type = 'phone';
         input.placeholder = 'Enter phone - numbers only.';
         input.setAttribute('id', 'phone');
+        input.setAttribute('minlength', 13);
         input.setAttribute('required', true);
         input.addEventListener('keyup', (ev)=>{
             _panel.signup.phoneFormat(ev, _panel.signup);
@@ -98,8 +99,7 @@ export default class SignForm {
         }
     }
 
-    signUpUser(url, data, success){
-        console.log(_panel);
+    signUpUser(url, data, ev, _panel, success){
         let params = typeof data == 'string' ? data : Object.keys(data).map(
                 function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]); }
             ).join('&');
@@ -108,10 +108,9 @@ export default class SignForm {
         xhr.open('POST', url);
         xhr.onload  = function() {
           if (xhr.readyState>3 && Math.trunc(xhr.status / 100) == 2) {
-            success(xhr.responseText);
+            success(ev, _panel, xhr.responseText);
           }else{
-            document.querySelector('.invalid-phone-error-message').innerHTML = 'There was an error with your request. Please try again.';
-            document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
+            _panel.signup.buildMessage(ev, 'error', _panel);
           }
         };
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -126,16 +125,9 @@ export default class SignForm {
     stripPhoneNumber(number){
         let newNumber = '';
         newNumber = number.split('(')[1];
-        try {
-            newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
-        } catch (error) {
-            return null;
-        }
-        try {
-            newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
-        } catch (error) {
-            return null;
-        }
+        newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
+        newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
+        console.log(newNumber);
         return newNumber;
     }
 
@@ -143,58 +135,86 @@ export default class SignForm {
         let tempClass = ev.target.parentNode.className;
         tempClass = tempClass.split(' ');
         ev.target.parentNode.className = tempClass[0];
+        try {
+            while (ev.target.parentNode.firstChild) {
+                ev.target.parentNode.removeChild(ev.target.parentNode.firstChild);
+            }
+        } catch (error) {
+            
+        }
+    }
+
+    buildMessage(ev, type, _panel){
+        while (ev.target.childNodes[2].firstChild) {
+            ev.target.childNodes[2].removeChild(ev.target.childNodes[2].firstChild);
+        }
+        let closeBtn = document.createElement('button');
+        closeBtn.innerText = 'x';
+        closeBtn.className = 'close-section-btn';
+        closeBtn.addEventListener("click", function(e){
+            e.preventDefault();
+            _panel.signup.closeSection(e);
+        });
+        let msg = document.createElement('p');
+        msg.innerText = null;
+        ev.target.childNodes[2].appendChild(closeBtn);
+        ev.target.childNodes[2].appendChild(msg);
+        ev.target.childNodes[2].className = null;
+        switch (type) {
+            case 'invalid':
+                msg.innerText = 'Invalid phone number. Please enter a valid number.';
+                ev.target.childNodes[2].className = 'alert-message-box active error';
+                break;
+
+            case 'missing':
+                msg.innerText = 'Plese select one or more services to recive reminders.';
+                ev.target.childNodes[2].className = 'alert-message-box active error';
+                break;
+
+            case 'error':
+                msg.innerText = 'There was an error with your request. Please try again.';
+                ev.target.childNodes[2].className = 'alert-message-box active error';
+                break;
+        
+            default:
+                msg.innerText = 'Check your phone for a confirmation message.';
+                ev.target.childNodes[2].className = 'alert-message-box active success';
+                break;
+        }
     }
      
     validatePhone(ev, _panel){
         console.log(ev);
-        let phoneNumber = ev.target[0].value;
+        let phoneNumber = ev.target[3].value;
         let a = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(phoneNumber);
         phoneNumber = this.stripPhoneNumber(phoneNumber);
-        if(phoneNumber == null){
-            console.log(ev.target.childNodes[2]);
-            let closeBtn = document.createElement('button');
-            closeBtn.innerText = 'x';
-            closeBtn.className = 'close-section-btn';
-            closeBtn.addEventListener("click", function(e){
-                e.preventDefault();
-                _panel.signup.closeSection(e);
-            });
-            let msg = document.createElement('p');
-            msg.innerText = 'Invalid phone number. Please enter a valid number.';
-            ev.target.childNodes[2].appendChild(closeBtn);
-            ev.target.childNodes[2].appendChild(msg);
-            ev.target.childNodes[2].className = 'alert-message-box active error';
+        if(a){
+            let routeIDs = '';
+            let servicesSignup = '';
+            let serviceCheckList = document.querySelectorAll('.checkbox-container-box > input[type="checkbox"]');
+            for (var i = 0; i < serviceCheckList.length; i++) {
+                if(serviceCheckList[i].checked){
+                routeIDs += serviceCheckList[i].value + ',';
+                servicesSignup += serviceCheckList[i].id + ',';
+                }
+            }
+            if(routeIDs !== ''){
+                let data = {
+                'phone_number'  : phoneNumber,
+                'waste_area_ids': routeIDs,
+                'service_type'  : servicesSignup,
+                'address' : 'test',
+                'latitude' :  _panel.location.lat,
+                'longitude' : _panel.location.lng
+                };
+                this.signUpUser('https://apis.detroitmi.gov/waste_notifier/subscribe/', data, ev, _panel, function(ev,_panel,response){
+                    _panel.signup.buildMessage(ev, 'success', _panel);
+                });
+            }else{
+                this.buildMessage(ev, 'missing', _panel);
+            }
         }else{
-            if(a){
-                let routeIDs = '';
-                let servicesSignup = '';
-                let serviceCheckList = document.querySelectorAll('.service-check > input[type="checkbox"]');
-                for (var i = 0; i < serviceCheckList.length; i++) {
-                  if(serviceCheckList[i].checked){
-                    routeIDs += serviceCheckList[i].value + ',';
-                    servicesSignup += serviceCheckList[i].name + ',';
-                  }
-                }
-                if(routeIDs !== ''){
-                  let data = {
-                    'phone_number'  : phoneNumber,
-                    'waste_area_ids': routeIDs,
-                    'service_type'  : servicesSignup,
-                    'address' : document.querySelector('.street-name').innerHTML,
-                    'latitude' :  document.querySelector('.info-container > input[name="lat"]').value,
-                    'longitude' : document.querySelector('.info-container > input[name="lng"]').value
-                  };
-                  sendSignUpRequest('https://apis.detroitmi.gov/waste_notifier/subscribe/', data, function(response){
-                      document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
-                  });
-                }else{
-                  document.querySelector('.invalid-phone-error-message').innerHTML = 'Plese select one or more services to recive reminders.';
-                  document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
-                }
-              }else{
-                document.querySelector('.invalid-phone-error-message').innerHTML = 'Invalid number. Please enter re-enter you number.';
-                document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
-              }
+            this.buildMessage(ev, 'invalid', _panel);
         }
     }
 }
