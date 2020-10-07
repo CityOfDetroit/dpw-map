@@ -1,5 +1,6 @@
 import moment from 'moment';
 import SignForm from './SignForm';
+import './Panel.scss';
 export default class Panel {
     constructor() {
         this.signup = new SignForm();

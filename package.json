@@ -12,7 +12,8 @@
     "build": "parcel build src/index.js --no-cache --public-url '.' --no-source-maps -d build"
   },
   "devDependencies": {
-    "parcel": "^2.0.0-beta.1"
+    "parcel": "^2.0.0-beta.1",
+    "sass": "^1.26.12"
   },
   "dependencies": {
     "esri-leaflet": "^2.5.0",

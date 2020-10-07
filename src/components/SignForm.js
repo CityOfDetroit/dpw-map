@@ -1,6 +1,8 @@
+import './SignForm.scss';
 export default class SignForm {
     constructor() {
         this.form = document.createElement('form');
+        this.form.className = 'sms-sign-up';
     }
 
     buildForm(_panel){
@@ -69,6 +71,9 @@ export default class SignForm {
         checkboxContainers.appendChild(checkboxContainerTrash);
         checkboxContainers.appendChild(checkboxContainerRecycle);
         checkboxContainers.appendChild(checkboxContainerBulk);
+        // Create message section
+        let alertMessage = document.createElement('div');
+        alertMessage.className = "alert-message-box";
         // Create submit button
         let signupButton = document.createElement('button');
         signupButton.innerText = "SIGN ME UP FOR REMINDERS";
@@ -76,6 +81,7 @@ export default class SignForm {
         _panel.signup.form = document.createElement('form');
         _panel.signup.form.appendChild(checkboxContainers);
         _panel.signup.form.appendChild(inputContainer);
+        _panel.signup.form.appendChild(alertMessage);
         _panel.signup.form.appendChild(signupButton);
         _panel.signup.form.addEventListener('submit', (ev) => {
             ev.preventDefault();
@@ -120,9 +126,23 @@ export default class SignForm {
     stripPhoneNumber(number){
         let newNumber = '';
         newNumber = number.split('(')[1];
-        newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
-        newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
+        try {
+            newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
+        } catch (error) {
+            return null;
+        }
+        try {
+            newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
+        } catch (error) {
+            return null;
+        }
         return newNumber;
+    }
+
+    closeSection(ev){
+        let tempClass = ev.target.parentNode.className;
+        tempClass = tempClass.split(' ');
+        ev.target.parentNode.className = tempClass[0];
     }
      
     validatePhone(ev, _panel){
@@ -130,35 +150,51 @@ export default class SignForm {
         let phoneNumber = ev.target[0].value;
         let a = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(phoneNumber);
         phoneNumber = this.stripPhoneNumber(phoneNumber);
-        if(a){
-          let routeIDs = '';
-          let servicesSignup = '';
-          let serviceCheckList = document.querySelectorAll('.service-check > input[type="checkbox"]');
-          for (var i = 0; i < serviceCheckList.length; i++) {
-            if(serviceCheckList[i].checked){
-              routeIDs += serviceCheckList[i].value + ',';
-              servicesSignup += serviceCheckList[i].name + ',';
-            }
-          }
-          if(routeIDs !== ''){
-            let data = {
-              'phone_number'  : phoneNumber,
-              'waste_area_ids': routeIDs,
-              'service_type'  : servicesSignup,
-              'address' : document.querySelector('.street-name').innerHTML,
-              'latitude' :  document.querySelector('.info-container > input[name="lat"]').value,
-              'longitude' : document.querySelector('.info-container > input[name="lng"]').value
-            };
-            sendSignUpRequest('https://apis.detroitmi.gov/waste_notifier/subscribe/', data, function(response){
-                document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
+        if(phoneNumber == null){
+            console.log(ev.target.childNodes[2]);
+            let closeBtn = document.createElement('button');
+            closeBtn.innerText = 'x';
+            closeBtn.className = 'close-section-btn';
+            closeBtn.addEventListener("click", function(e){
+                e.preventDefault();
+                _panel.signup.closeSection(e);
             });
-          }else{
-            document.querySelector('.invalid-phone-error-message').innerHTML = 'Plese select one or more services to recive reminders.';
-            document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
-          }
+            let msg = document.createElement('p');
+            msg.innerText = 'Invalid phone number. Please enter a valid number.';
+            ev.target.childNodes[2].appendChild(closeBtn);
+            ev.target.childNodes[2].appendChild(msg);
+            ev.target.childNodes[2].className = 'alert-message-box active error';
         }else{
-          document.querySelector('.invalid-phone-error-message').innerHTML = 'Invalid number. Please enter re-enter you number.';
-          document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
+            if(a){
+                let routeIDs = '';
+                let servicesSignup = '';
+                let serviceCheckList = document.querySelectorAll('.service-check > input[type="checkbox"]');
+                for (var i = 0; i < serviceCheckList.length; i++) {
+                  if(serviceCheckList[i].checked){
+                    routeIDs += serviceCheckList[i].value + ',';
+                    servicesSignup += serviceCheckList[i].name + ',';
+                  }
+                }
+                if(routeIDs !== ''){
+                  let data = {
+                    'phone_number'  : phoneNumber,
+                    'waste_area_ids': routeIDs,
+                    'service_type'  : servicesSignup,
+                    'address' : document.querySelector('.street-name').innerHTML,
+                    'latitude' :  document.querySelector('.info-container > input[name="lat"]').value,
+                    'longitude' : document.querySelector('.info-container > input[name="lng"]').value
+                  };
+                  sendSignUpRequest('https://apis.detroitmi.gov/waste_notifier/subscribe/', data, function(response){
+                      document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
+                  });
+                }else{
+                  document.querySelector('.invalid-phone-error-message').innerHTML = 'Plese select one or more services to recive reminders.';
+                  document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
+                }
+              }else{
+                document.querySelector('.invalid-phone-error-message').innerHTML = 'Invalid number. Please enter re-enter you number.';
+                document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
+              }
         }
     }
 }

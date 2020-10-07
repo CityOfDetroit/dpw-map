@@ -1,0 +1,9 @@
+@import 'colors.scss';
+#panel{
+    background-color: #eaeaea;
+
+    button{
+        background-color: $color-4;
+        color: $white;
+    }
+}

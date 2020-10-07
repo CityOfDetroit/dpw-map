@@ -1,0 +1,25 @@
+@import 'colors.scss';
+.sms-signup-box{
+    
+    form{
+        border: .1em solid;
+
+        .alert-message-box{
+            display: none;
+        }
+    
+        .alert-message-box.active{
+            display: block;
+        }
+    
+        .alert-message-box.error{
+            background-color: $color-4;
+            color: $white;
+        }
+    
+        .alert-message-box.error{
+            background-color: $color-2;
+            color: $black;
+        }
+    }
+}
