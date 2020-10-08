@@ -1,4 +1,4 @@
-import Controller from './components/Controller';
+import App from './components/App';
 (function(){
-  let controller = new Controller();
+  let app = new App();
 })(window);

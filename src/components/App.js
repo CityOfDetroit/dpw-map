@@ -2,21 +2,24 @@ import * as esri from 'esri-leaflet';
 import * as L from 'leaflet';
 import moment from 'moment';
 import Panel from './Panel';
+import Geocoder from './Geocoder';
+import './App.scss';
 import '../../node_modules/leaflet/dist/leaflet.css';
 
-export default class Controller {
+export default class App {
     constructor() {
         this.month = moment().month() + 1;
         this.year = moment().year();
         this.point = null;
         this.map = null;
         this.panel = new Panel();
+        this.geocoder = new Geocoder('geocoder', this);
         this.initialLoad(this);
     }
 
-    initialLoad(_controller){
-        _controller.map = L.map('map').setView([42.36, -83.1], 12);
-        esri.basemapLayer('Streets').addTo(_controller.map);
+    initialLoad(_app){
+        _app.map = L.map('map').setView([42.36, -83.1], 12);
+        esri.basemapLayer('Streets').addTo(_app.map);
 
         let wasteRoutes = esri.featureLayer({
             url: 'https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0',
@@ -45,7 +48,7 @@ export default class Controller {
                         break;
                 }
             }
-        }).addTo(_controller.map);
+        }).addTo(_app.map);
 
         let userPoint = {
             color: 'red',
@@ -54,30 +57,30 @@ export default class Controller {
             radius: 20
         };
 
-        _controller.map.on('click', function (e) {
+        _app.map.on('click', function (e) {
             console.log(e);
             wasteRoutes.query().intersects(e.latlng).run(function (error, featureCollection, response) {
                 if (error) {
                   console.log(error);
                   return;
                 }
-                if(_controller.point){
-                    _controller.point.setLatLng(e.latlng);
+                if(_app.point){
+                    _app.point.setLatLng(e.latlng);
                 }else{
-                    _controller.point = L.circle(e.latlng, userPoint).addTo(_controller.map);
+                    _app.point = L.circle(e.latlng, userPoint).addTo(_app.map);
                 }
-                _controller.map.flyTo(e.latlng, 15);
-                _controller.panel.currentProvider = featureCollection.features[0].properties.contractor;
+                _app.map.flyTo(e.latlng, 15);
+                _app.panel.currentProvider = featureCollection.features[0].properties.contractor;
                 console.log(featureCollection.features);
-                fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_controller.year}/month/${_controller.month}/`)
+                fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
                 .then((res) => {
                     res.json().then(data => {
                         console.log(data);
-                        _controller.panel.location.lat = e.latlng.lat;
-                        _controller.panel.location.lng = e.latlng.lng;
-                        _controller.panel.data = data;
-                        _controller.panel.createPanel(_controller.panel);
-                        document.getElementById('panel').className = "active";
+                        _app.panel.location.lat = e.latlng.lat;
+                        _app.panel.location.lng = e.latlng.lng;
+                        _app.panel.data = data;
+                        _app.panel.createPanel(_app.panel);
+                        document.querySelector('#app .panel').className = "panel active";
                     });
                 })
                 .catch((error) => {
@@ -85,5 +88,9 @@ export default class Controller {
                 });
             });
         });
+    }
+
+    checkParcelValid(parcel){
+        return /\d/.test(parcel);
     }
 }
