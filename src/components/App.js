@@ -5,6 +5,8 @@ import Panel from './Panel';
 import Geocoder from './Geocoder';
 import './App.scss';
 import '../../node_modules/leaflet/dist/leaflet.css';
+const markerIcon = require('../../node_modules/leaflet/dist/images/marker-icon.png');
+const markerIconShadow = require('../../node_modules/leaflet/dist/images/marker-shadow.png');
 
 export default class App {
     constructor() {
@@ -12,6 +14,7 @@ export default class App {
         this.year = moment().year();
         this.point = null;
         this.map = null;
+        this.layers = {};
         this.panel = new Panel();
         this.geocoder = new Geocoder('geocoder', this);
         this.initialLoad(this);
@@ -19,9 +22,11 @@ export default class App {
 
     initialLoad(_app){
         _app.map = L.map('map').setView([42.36, -83.1], 12);
-        esri.basemapLayer('Streets').addTo(_app.map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(_app.map);
 
-        let wasteRoutes = esri.featureLayer({
+        _app.layers['wasteRoutes'] = esri.featureLayer({
             url: 'https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0',
             simplifyFactor: 0.5,
             precision: 5,
@@ -50,42 +55,58 @@ export default class App {
             }
         }).addTo(_app.map);
 
-        let userPoint = {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 1,
-            radius: 20
-        };
+       
 
         _app.map.on('click', function (e) {
             console.log(e);
-            wasteRoutes.query().intersects(e.latlng).run(function (error, featureCollection, response) {
-                if (error) {
-                  console.log(error);
-                  return;
-                }
-                if(_app.point){
-                    _app.point.setLatLng(e.latlng);
-                }else{
-                    _app.point = L.circle(e.latlng, userPoint).addTo(_app.map);
-                }
-                _app.map.flyTo(e.latlng, 15);
-                _app.panel.currentProvider = featureCollection.features[0].properties.contractor;
-                console.log(featureCollection.features);
-                fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
-                .then((res) => {
-                    res.json().then(data => {
-                        console.log(data);
-                        _app.panel.location.lat = e.latlng.lat;
-                        _app.panel.location.lng = e.latlng.lng;
-                        _app.panel.data = data;
-                        _app.panel.createPanel(_app.panel);
-                        document.querySelector('#app .panel').className = "panel active";
-                    });
-                })
-                .catch((error) => {
-                    console.log(error);
+            _app.queryLayer(_app, 'wasteRoutes',e.latlng);
+        });
+    }
+
+    queryLayer(_app, layer, latlng){
+        console.log(latlng);
+        let myIcon = L.icon({
+            iconUrl: markerIcon,
+            iconSize: [25, 35],
+            iconAnchor: [25, 35],
+            popupAnchor: [-3, -76],
+            shadowUrl: markerIconShadow,
+            shadowSize: [68, 95],
+            shadowAnchor: [22, 94]
+        });
+        let tempLocation = null;
+        if(latlng.geometry){
+            tempLocation = {lat: latlng.geometry.coordinates[1],lng:  latlng.geometry.coordinates[0]};            
+        }else{
+            tempLocation = latlng;
+        }
+        let userPoint = L.layerGroup().addTo(_app.map);
+        _app.layers[layer].query().intersects(latlng).run(function (error, featureCollection, response) {
+            if (error) {
+              console.log(error);
+              return;
+            }
+            if(_app.point){
+                _app.point.clearLayers();
+                _app.point = userPoint.addLayer(L.marker(tempLocation,{icon: myIcon}));
+            }else{ 
+                _app.point = userPoint.addLayer(L.marker(tempLocation,{icon: myIcon}));
+            }
+            _app.map.flyTo(tempLocation, 15);
+            _app.panel.currentProvider = featureCollection.features[0].properties.contractor;
+            console.log(featureCollection.features);
+            fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
+            .then((res) => {
+                res.json().then(data => {
+                    console.log(data);
+                    _app.panel.location.lat = latlng.lat;
+                    _app.panel.location.lng = latlng.lng;
+                    _app.panel.data = data;
+                    _app.panel.createPanel(_app.panel);
                 });
+            })
+            .catch((error) => {
+                console.log(error);
             });
         });
     }

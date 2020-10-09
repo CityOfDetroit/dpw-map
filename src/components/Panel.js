@@ -44,8 +44,6 @@ export default class Panel {
             e.preventDefault();
             _panel.closePanel(e);
         });
-        
-        let nextPickups = _panel.buildNextPickup(_panel);
         tempPanel.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="100" height="70" viewBox="0 0 100 68">
         <g id="large">
@@ -60,6 +58,7 @@ export default class Panel {
         <h3>No Information found.</h3>
         `;
         tempPanel.prepend(closeBtn);
+        document.querySelector('#app .panel').className = "panel active";
     }
 
     createPanel(_panel){
@@ -82,6 +81,7 @@ export default class Panel {
         tempPanel.prepend(closeBtn);
         _panel.signup.buildForm(_panel);
         document.querySelector('.panel .panel-box .sms-signup-box').appendChild(_panel.signup.form);
+        document.querySelector('#app .panel').className = "panel active";
     }
 
     buildNextPickup(_panel){
