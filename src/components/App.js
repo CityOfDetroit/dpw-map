@@ -65,6 +65,7 @@ export default class App {
 
     queryLayer(_app, layer, latlng){
         console.log(latlng);
+        let needAdress = false;
         let myIcon = L.icon({
             iconUrl: markerIcon,
             iconSize: [25, 35],
@@ -78,6 +79,7 @@ export default class App {
         if(latlng.geometry){
             tempLocation = {lat: latlng.geometry.coordinates[1],lng:  latlng.geometry.coordinates[0]};            
         }else{
+            needAdress = true;
             tempLocation = latlng;
         }
         let userPoint = L.layerGroup().addTo(_app.map);
@@ -99,10 +101,23 @@ export default class App {
             .then((res) => {
                 res.json().then(data => {
                     console.log(data);
-                    _app.panel.location.lat = latlng.lat;
-                    _app.panel.location.lng = latlng.lng;
+                    _app.panel.location.lat = tempLocation.lat;
+                    _app.panel.location.lng = tempLocation.lng;
                     _app.panel.data = data;
-                    _app.panel.createPanel(_app.panel);
+                    if(needAdress){
+                        fetch(`https://gis.detroitmi.gov/arcgis/rest/services/DoIT/StreetCenterlineLatLng/GeocodeServer/reverseGeocode?location=${_app.panel.location.lng}%2C+${_app.panel.location.lat}&distance=&outSR=&f=pjson`)
+                        .then((res) => {
+                            res.json().then(data => {
+                                console.log(data);
+                                _app.panel.address = data.address.Street;
+                                _app.panel.createPanel(_app.panel);
+                            });
+                        }).catch((error) => {
+                            console.log(error);
+                        });
+                    }else{
+                        _app.panel.createPanel(_app.panel);
+                    }
                 });
             })
             .catch((error) => {

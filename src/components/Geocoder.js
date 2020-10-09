@@ -4,8 +4,6 @@ export default class Geocoder {
   constructor(container, _controller) {
     this.form = null;
     this._controller = _controller;
-    
-    this.user = null;
     this.init(document.getElementById(container), this);
   }
 
@@ -41,13 +39,6 @@ export default class Geocoder {
     form.appendChild(list);
     container.appendChild(form);
     this.form = form;
-  }
-
-  writeUserData(userId, name, pass) {
-    firebase.database().ref('users/' + userId).set({
-      username: name,
-      password: pass
-    });
   }
 
   supplementGeocoder(address, geocoder, type){
@@ -105,6 +96,7 @@ export default class Geocoder {
                             (parcel == null) ? location = data.candidates[0].location : location = null; 
                             console.log('Found location');
                             let point = turf.point([parcel.location.x, parcel.location.y]);
+                            geocoder._controller.panel.address = parcel.address;
                             geocoder._controller.queryLayer(geocoder._controller, 'wasteRoutes',point);
                         }else{
                             console.log('no locations found');
@@ -175,39 +167,6 @@ export default class Geocoder {
     while (geocoder.form.childNodes[3].firstChild) {
         geocoder.form.childNodes[3].removeChild(geocoder.form.childNodes[3].firstChild);
     }
-  }
-
-  needGeocode(address, geocoder, location){
-    fetch('https://us-central1-detroit-iet.cloudfunctions.net/getToken')
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) {
-        let params = [
-            {
-              "attributes" : {
-                "user_input" : address
-              },
-              "geometry" : {
-                "x" : 0,
-                "y" : 0
-              }
-            }
-        ];
-        if(location != null){
-            params[0].geometry.x = location.x;
-            params[0].geometry.y = location.y;
-        }
-        let request = new Request(`https://services2.arcgis.com/qvkbeam7Wirps6zC/ArcGIS/rest/services/addressvalidator/FeatureServer/0/addFeatures?token=${data.access_token}&features=${encodeURIComponent(JSON.stringify(params))}&f=json`, {
-            method: 'POST',
-            body: '',
-            headers: new Headers(),
-            mode: 'cors',
-            cache: 'default'
-        });
-        fetch(request)
-        .then((res) => {
-            // console.log(res);
-        });
-    });
   }
 
   submit(ev, geocoder){

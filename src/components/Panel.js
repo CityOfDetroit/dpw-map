@@ -7,6 +7,7 @@ export default class Panel {
             lat: null,
             lng: null
         };
+        this.address = null;
         this.signup = new SignForm();
         this.currentProvider = null;
         this.providers = {
@@ -62,6 +63,7 @@ export default class Panel {
     }
 
     createPanel(_panel){
+        console.log(_panel);
         let tempPanel = document.querySelector('.panel .panel-box');
         let closeBtn = document.createElement('button');
         closeBtn.innerText = 'x';
@@ -73,7 +75,7 @@ export default class Panel {
         
         let nextPickups = _panel.buildNextPickup(_panel);
         tempPanel.innerHTML = `
-            <h1>Panel</h1>
+            <h2>${_panel.address}</h2>
             <section class="sms-signup-box">
             </section>
             ${nextPickups}
@@ -90,24 +92,24 @@ export default class Panel {
         return `
         <section class="waste-services">
         <div class="group">
-            <span class="header">Provider</span>
+            <span class="header">PROVIDER</span>
             <p><a href="${_panel.providers[_panel.currentProvider].url}" target="_blank">${_panel.currentProvider}</a> - ${_panel.providers[_panel.currentProvider].phone}</p>
         </div>
         <div class="group">
-            <span class="header">Garbage</span>
+            <span class="header">GARBAGE</span>
             <p>${moment(_panel.data.next_pickups.trash.next_pickup).format('dddd - MMM Do')}</p>
         </div>
         <div class="group">
-            <span class="header">Curbside Recycl</span>
+            <span class="header">CURBSIDE RECYCLE</span>
             <p>${moment(_panel.data.next_pickups.recycling.next_pickup).format('dddd - MMM Do')}</p>
         </div>
         <div class="group">
-            <span class="header">Bulk</span>
+            <span class="header">BULK</span>
             <p>${moment(_panel.data.next_pickups.bulk.next_pickup).format('dddd - MMM Do')}</p>
         </div>
         ${(_panel.data.next_pickups['yard waste']) ? `
         <div class="group">
-            <span class="header">Yard</span>
+            <span class="header">YARD</span>
             <p>${moment(_panel.data.next_pickups['yard waste'].next_pickup).format('dddd - MMM Do')}</p>
         </div></sections>` : ``}
         `;
