@@ -5,8 +5,6 @@ import Panel from './Panel';
 import Geocoder from './Geocoder';
 import './App.scss';
 import '../../node_modules/leaflet/dist/leaflet.css';
-const markerIcon = require('../../node_modules/leaflet/dist/images/marker-icon.png');
-const markerIconShadow = require('../../node_modules/leaflet/dist/images/marker-shadow.png');
 
 export default class App {
     constructor() {
@@ -33,23 +31,23 @@ export default class App {
             style: function (feature) {
                 switch (feature.properties.day) {
                     case 'monday':
-                        return { color: 'blue', weight: 2 };
+                        return { color: '#377eb8', weight: 2 };
                         break;
 
                     case 'tuesday':
-                        return { color: 'red', weight: 2 };
+                        return { color: '#4daf4a', weight: 2 };
                         break;
 
                     case 'wednesday':
-                        return { color: 'green', weight: 2 };
+                        return { color: '#984ea3', weight: 2 };
                         break;
 
                     case 'thursday':
-                        return { color: 'yellow', weight: 2 };
+                        return { color: '#ff7f00', weight: 2 };
                         break;
                 
                     default:
-                        return { color: 'purple', weight: 2 };
+                        return { color: '#e41a1c', weight: 2 };
                         break;
                 }
             }
@@ -67,11 +65,11 @@ export default class App {
         console.log(latlng);
         let needAdress = false;
         let myIcon = L.icon({
-            iconUrl: markerIcon,
+            iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
             iconSize: [25, 35],
             iconAnchor: [25, 35],
             popupAnchor: [-3, -76],
-            shadowUrl: markerIconShadow,
+            shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
             shadowSize: [68, 95],
             shadowAnchor: [22, 94]
         });

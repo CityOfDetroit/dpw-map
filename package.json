@@ -9,10 +9,10 @@
   "scripts": {
     "start": "parcel src/index.html --https --no-cache -p 3000 --open",
     "test": "./node_modules/.bin/cypress open",
-    "build": "parcel build src/index.js --no-cache --public-url '.' --no-source-maps"
+    "build": "parcel build src/index.js --no-cache --public-url '.' --no-source-maps -d build"
   },
   "devDependencies": {
-    "parcel": "^2.0.0-beta.1",
+    "cssnano": "^4.1.10",
     "sass": "^1.26.12"
   },
   "dependencies": {

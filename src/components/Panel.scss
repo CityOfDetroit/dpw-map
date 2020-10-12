@@ -2,7 +2,7 @@
 $base-duration: 300ms;
 $cubic: cubic-bezier(.64,.09,.08,1);
 .panel{
-    z-index: 1001;
+    z-index: 1002;
     position: absolute;
     top: 0;
     left: -31em;
@@ -20,6 +20,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
         background-color: #eaeaea;
 
         h2{
+            font-size: 1.5em;
             border-bottom: solid $color-3;
             padding-right: 4em;
             margin: 1em 0;
@@ -29,7 +30,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
             border: .1em solid $color-1;
             margin-bottom: 1.25em;
             position: relative;
-            padding: .5em;
+            padding: 1em;
 
             .header{
                 position: absolute;
@@ -45,12 +46,13 @@ $cubic: cubic-bezier(.64,.09,.08,1);
         position: absolute;
         top: .25em;
         right: .25em;
-        padding: .5em .8em;
+        padding: .5em .9em;
         border: none;
         font-size: 1.25em;
         border-radius: 50%;    
         background-color: $color-4;
         color: $white;
+        font-weight: bold;
         cursor: pointer;
     }
 }
