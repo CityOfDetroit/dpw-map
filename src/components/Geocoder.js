@@ -80,7 +80,6 @@ export default class Geocoder {
                     fetch(url)
                     .then((resp) => resp.json()) // Transform the data into json
                     .then(function(city) {
-                        console.log(city);
                         if(city.features.length){
                             geocoder._controller.panel.createErrorMsg(geocoder._controller.panel);
                             let parcel = null;
@@ -92,25 +91,20 @@ export default class Geocoder {
                                     }
                                 }
                             });
-                            console.log(parcel);
-                            (parcel == null) ? location = data.candidates[0].location : location = null; 
-                            console.log('Found location');
+                            (parcel == null) ? location = data.candidates[0].location : location = null;
                             let point = turf.point([parcel.location.x, parcel.location.y]);
                             geocoder._controller.panel.address = parcel.address;
                             geocoder._controller.queryLayer(geocoder._controller, 'wasteRoutes',point);
                         }else{
-                            console.log('no locations found');
                             geocoder._controller.panel.createErrorMsg(geocoder._controller.panel);
                         }
                     });
                 }catch (error) {
-                    console.log('error found');
                     geocoder._controller.panel.createErrorMsg(geocoder._controller.panel);
                 }
             }
         });
     } catch (error) {
-        console.log('error found');
         geocoder._controller.panel.createErrorMsg(geocoder._controller.panel);
     }
   }

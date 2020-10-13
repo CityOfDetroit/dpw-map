@@ -6,7 +6,6 @@ export default class SignForm {
     }
 
     buildForm(_panel){
-        console.log(_panel);
         // Create phone input
         let input = document.createElement('input');
         input.type = 'phone';
@@ -127,7 +126,6 @@ export default class SignForm {
         newNumber = number.split('(')[1];
         newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
         newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
-        console.log(newNumber);
         return newNumber;
     }
 
@@ -184,7 +182,6 @@ export default class SignForm {
     }
      
     validatePhone(ev, _panel){
-        console.log(ev);
         let phoneNumber = ev.target[3].value;
         let a = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(phoneNumber);
         phoneNumber = this.stripPhoneNumber(phoneNumber);
@@ -203,7 +200,7 @@ export default class SignForm {
                 'phone_number'  : phoneNumber,
                 'waste_area_ids': routeIDs,
                 'service_type'  : servicesSignup,
-                'address' : 'test',
+                'address' : _panel.address,
                 'latitude' :  _panel.location.lat,
                 'longitude' : _panel.location.lng
                 };

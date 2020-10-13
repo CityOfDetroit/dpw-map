@@ -2,7 +2,8 @@ import moment from 'moment';
 import SignForm from './SignForm';
 import './Panel.scss';
 export default class Panel {
-    constructor() {
+    constructor(app) {
+        this.app = app;
         this.location = {
             lat: null,
             lng: null
@@ -23,10 +24,11 @@ export default class Panel {
         this.data = null;
     }
 
-    closePanel(ev){
+    closePanel(ev,_panel){
         let tempClass = ev.target.parentNode.parentNode.className;
         tempClass = tempClass.split(' ');
         ev.target.parentNode.parentNode.className = tempClass[0];
+        _panel.app.map.flyTo([42.36, -83.1], 12);
         try {
             while (ev.target.parentNode.firstChild) {
                 ev.target.parentNode.removeChild(ev.target.parentNode.firstChild);
@@ -63,14 +65,13 @@ export default class Panel {
     }
 
     createPanel(_panel){
-        console.log(_panel);
         let tempPanel = document.querySelector('.panel .panel-box');
         let closeBtn = document.createElement('button');
         closeBtn.innerText = 'x';
         closeBtn.className = 'close-section-btn';
         closeBtn.addEventListener("click", function(e){
             e.preventDefault();
-            _panel.closePanel(e);
+            _panel.closePanel(e, _panel);
         });
         
         let nextPickups = _panel.buildNextPickup(_panel);
@@ -87,8 +88,6 @@ export default class Panel {
     }
 
     buildNextPickup(_panel){
-        console.log(_panel);
-        console.log(_panel.data.next_pickups.trash.next_pickup);
         return `
         <section class="waste-services">
         <div class="group">

@@ -13,7 +13,7 @@ export default class App {
         this.point = null;
         this.map = null;
         this.layers = {};
-        this.panel = new Panel();
+        this.panel = new Panel(this);
         this.geocoder = new Geocoder('geocoder', this);
         this.initialLoad(this);
     }
@@ -56,13 +56,11 @@ export default class App {
        
 
         _app.map.on('click', function (e) {
-            console.log(e);
             _app.queryLayer(_app, 'wasteRoutes',e.latlng);
         });
     }
 
     queryLayer(_app, layer, latlng){
-        console.log(latlng);
         let needAdress = false;
         let myIcon = L.icon({
             iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -94,11 +92,9 @@ export default class App {
             }
             _app.map.flyTo(tempLocation, 15);
             _app.panel.currentProvider = featureCollection.features[0].properties.contractor;
-            console.log(featureCollection.features);
             fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
             .then((res) => {
                 res.json().then(data => {
-                    console.log(data);
                     _app.panel.location.lat = tempLocation.lat;
                     _app.panel.location.lng = tempLocation.lng;
                     _app.panel.data = data;
@@ -106,7 +102,6 @@ export default class App {
                         fetch(`https://gis.detroitmi.gov/arcgis/rest/services/DoIT/StreetCenterlineLatLng/GeocodeServer/reverseGeocode?location=${_app.panel.location.lng}%2C+${_app.panel.location.lat}&distance=&outSR=&f=pjson`)
                         .then((res) => {
                             res.json().then(data => {
-                                console.log(data);
                                 _app.panel.address = data.address.Street;
                                 _app.panel.createPanel(_app.panel);
                             });
