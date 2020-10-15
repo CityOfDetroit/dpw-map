@@ -20,10 +20,9 @@ export default class App {
 
     initialLoad(_app){
         _app.map = L.map('map').setView([42.36, -83.1], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+        esri.basemapLayer('Gray', {
+            detectRetina: true
         }).addTo(_app.map);
-
         _app.layers['wasteRoutes'] = esri.featureLayer({
             url: 'https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0',
             simplifyFactor: 0.5,
