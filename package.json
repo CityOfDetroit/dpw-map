@@ -1,9 +1,9 @@
 {
-  "name": "DPWMap",
+  "name": "dpw-map",
   "version": "2.0.0",
   "description": "Web map for identifying trash and recycling pick up dates.",
   "main": "build/index.js",
-  "repository": "git@github.com:CityOfDetroit/DPWMap.git",
+  "repository": "git@github.com:CityOfDetroit/dpw-map.git",
   "author": " ",
   "license": "MIT",
   "scripts": {

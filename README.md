@@ -1,4 +1,4 @@
-# DPWMap
+# DPW Waste Pick Up Map
 Department of Public Work Services. Help citizens find their specific waste pick up dates base on their address.
 
 ## Getting Started
@@ -6,6 +6,7 @@ Department of Public Work Services. Help citizens find their specific waste pick
 This project was created using:
  - [Leaflet](https://leafletjs.com/) for WebGL map rendering.
  - [Esri-Leaflet](https://github.com/Esri/esri-leaflet) for Esri connections.
+ - [Turf](https://turfjs.org/) for geospacial analysis.
  - [Parcel](https://parceljs.org/) as a web application bundler.
  - [Yarn](https://yarnpkg.com/en/) for 3rd party library use and management.
 
@@ -15,7 +16,7 @@ Please make sure these are installed locally
 
 1. Download the repo.
     ```
-    $ git clone git@github.com:CityOfDetroit/DPWMap.git
+    $ git clone git@github.com:CityOfDetroit/dpw-map.git
     ```
 2. Install node dependencies.
 
@@ -40,4 +41,4 @@ Please make sure these are installed locally
 ## Resources
 
 * SLACK - #webteam
-* GitHub - https://github.com/CityOfDetroit/DPWMap
+* GitHub - https://github.com/CityOfDetroit/dpw-map

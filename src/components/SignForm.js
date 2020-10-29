@@ -204,9 +204,13 @@ export default class SignForm {
                 'latitude' :  _panel.location.lat,
                 'longitude' : _panel.location.lng
                 };
-                this.signUpUser('https://apis.detroitmi.gov/waste_notifier/subscribe/', data, ev, _panel, function(ev,_panel,response){
+                try {
+                    this.signUpUser('https://apis.detroitmi.gov/waste_notifier/subscribe/', data, ev, _panel, function(ev,_panel,response){
                     _panel.signup.buildMessage(ev, 'success', _panel);
                 });
+                } catch (error) {
+                    
+                }
             }else{
                 this.buildMessage(ev, 'missing', _panel);
             }
