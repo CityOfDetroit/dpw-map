@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import moment from 'moment';
 import Panel from './Panel';
 import Geocoder from './Geocoder';
+import Cal from './Cal';
 import './App.scss';
 import '../../node_modules/leaflet/dist/leaflet.css';
 
@@ -13,6 +14,7 @@ export default class App {
         this.point = null;
         this.map = null;
         this.layers = {};
+        this.calendar = null;
         this.panel = new Panel(this);
         this.geocoder = new Geocoder('geocoder', this);
         this.initialLoad(this);
@@ -116,6 +118,11 @@ export default class App {
                 console.log(error);
             });
         });
+    }
+
+    createCalendar(ev, _app){
+        console.log(ev);
+        _app.calendar = new Cal('calendar', _app);
     }
 
     checkParcelValid(parcel){

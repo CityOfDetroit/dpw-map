@@ -79,8 +79,11 @@ export default class Panel {
             <h2>${_panel.address}</h2>
             <section class="sms-signup-box">
             </section>
+            <section class="cal-box">
+            </section>
             ${nextPickups}
         `;
+        _panel.buildCaledarSection(_panel);
         tempPanel.prepend(closeBtn);
         _panel.signup.buildForm(_panel);
         document.querySelector('.panel .panel-box .sms-signup-box').appendChild(_panel.signup.form);
@@ -112,5 +115,15 @@ export default class Panel {
             <p>${moment(_panel.data.next_pickups['yard waste'].next_pickup).format('dddd - MMM Do')}</p>
         </div></sections>` : ``}
         `;
+    }
+
+    buildCaledarSection(_panel){
+        let btn = document.createElement('button');
+        btn.innerHTML = `<i class="far fa-calendar-alt"></i> MY SCHEDULE`;
+        btn.className = 'cal-btn';
+        btn.addEventListener('click', (ev)=>{
+            _panel.app.createCalendar(ev, _panel.app);
+        });
+        document.querySelector('.cal-box').appendChild(btn);
     }
 }
