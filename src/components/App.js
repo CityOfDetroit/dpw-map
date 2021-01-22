@@ -11,10 +11,15 @@ export default class App {
     constructor() {
         this.month = moment().month() + 1;
         this.year = moment().year();
+        this.schedule = {
+            garbage: null,
+            recycle: null,
+            bulk:    null
+        }
         this.point = null;
         this.map = null;
         this.layers = {};
-        this.calendar = null;
+        this.calendar = new Cal('calendar', this);;
         this.panel = new Panel(this);
         this.geocoder = new Geocoder('geocoder', this);
         this.initialLoad(this);
@@ -96,6 +101,10 @@ export default class App {
             fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
             .then((res) => {
                 res.json().then(data => {
+                    console.log(data);
+                    _app.schedule.garbage = data.next_pickups.trash.next_pickup;
+                    _app.schedule.recycle = data.next_pickups.recycling.next_pickup;
+                    _app.schedule.bulk = data.next_pickups.bulk.next_pickup;
                     _app.panel.location.lat = tempLocation.lat;
                     _app.panel.location.lng = tempLocation.lng;
                     _app.panel.data = data;
@@ -121,8 +130,7 @@ export default class App {
     }
 
     createCalendar(ev, _app){
-        console.log(ev);
-        _app.calendar = new Cal('calendar', _app);
+        _app.calendar.createCalendar(_app);
     }
 
     checkParcelValid(parcel){
