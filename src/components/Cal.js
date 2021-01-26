@@ -31,7 +31,6 @@ export default class Cal {
     tempCal.appendChild(calContainer);
     tempCal.prepend(closeBtn);
     _app.calendar.buildSchedule(_app);
-    console.log(_app.calendar.pickups);
     _app.calendar.calendar = new Calendar(calContainer, {
       plugins: [ dayGridPlugin ],
       eventSources: _app.calendar.pickups
@@ -41,12 +40,12 @@ export default class Cal {
   }
 
   buildSchedule(_app){
-    console.log(_app.schedule);
     _app.calendar.buildPickUps(_app);
   }
 
   buildPickUps(_app){
-    console.log(_app.schedule);
+    let pastTrashDate = _app.schedule.garbage;
+    let trashDate = _app.schedule.garbage;
     let pastDate = _app.schedule.garbage;
     let latestDate = _app.schedule.garbage;
     let gList = {
@@ -83,7 +82,7 @@ export default class Cal {
     for (let index = 0; index < 26; index++) {
       let tempG = {
         title  : 'Trash',
-        start  : moment(latestDate).add(14,'d').format('YYYY-MM-DD'),
+        start  : moment(trashDate).add(7,'d').format('YYYY-MM-DD'),
       };
       let tempR = {
         title  : 'Recycle',
@@ -95,7 +94,7 @@ export default class Cal {
       };
       let pasttempG = {
         title  : 'Trash',
-        start  : moment(pastDate).subtract(14,'d').format('YYYY-MM-DD'),
+        start  : moment(pastTrashDate).subtract(7,'d').format('YYYY-MM-DD'),
       };
       let pasttempR = {
         title  : 'Recycle',
@@ -105,6 +104,8 @@ export default class Cal {
         title  : 'Bulk',
         start  : moment(pastDate).subtract(14,'d').format('YYYY-MM-DD'),
       };
+      trashDate = moment(trashDate).add(7,'d');
+      pastTrashDate = moment(pastTrashDate).subtract(7,'d');
       pastDate = moment(pastDate).subtract(14,'d');
       latestDate = moment(latestDate).add(14,'d');
       gList.events.push(tempG);

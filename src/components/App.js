@@ -101,7 +101,6 @@ export default class App {
             fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
             .then((res) => {
                 res.json().then(data => {
-                    console.log(data);
                     _app.schedule.garbage = data.next_pickups.trash.next_pickup;
                     _app.schedule.recycle = data.next_pickups.recycling.next_pickup;
                     _app.schedule.bulk = data.next_pickups.bulk.next_pickup;
