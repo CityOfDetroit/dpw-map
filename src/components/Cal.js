@@ -21,7 +21,7 @@ export default class Cal {
     let calContainer = document.createElement('article');
     calContainer.id = 'calendar';
     tempCal.innerHTML = `
-      <article class='legend'>
+      <article class='cal-legend'>
         <span class="garbage">Garbage</span> 
         <span class="recycle">Recycle</span> 
         <span class="bulk">Bulk</span> 
@@ -65,8 +65,8 @@ export default class Cal {
           start  : moment(latestDate).format('YYYY-MM-DD'),
         }
       ],
-      color: '#004445',     // an option!
-      textColor: 'white' // an option!
+      color: '#9FD5B3',     // an option!
+      textColor: '#004445' // an option!
     };
     let bList = {
       events: [

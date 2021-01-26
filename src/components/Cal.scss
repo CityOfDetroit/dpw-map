@@ -19,7 +19,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
         position: relative;
         background-color: #eaeaea;
 
-        .legend{
+        .cal-legend{
             padding: 1em 0;
             margin-bottom: .5em;
             width: calc(100% - 4em);
@@ -30,6 +30,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
                 padding: .75em;
                 margin-right: .25em;
                 font-size: 1em;
+                font-weight: bold;
             }
 
             .garbage{
