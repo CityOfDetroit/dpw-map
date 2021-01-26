@@ -16,6 +16,8 @@
     "sass": "^1.26.12"
   },
   "dependencies": {
+    "@fullcalendar/core": "^5.5.1",
+    "@fullcalendar/daygrid": "^5.5.0",
     "@turf/turf": "^5.1.6",
     "esri-leaflet": "^2.5.0",
     "leaflet": "^1.7.1",

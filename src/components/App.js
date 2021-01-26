@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import moment from 'moment';
 import Panel from './Panel';
 import Geocoder from './Geocoder';
+import Cal from './Cal';
 import './App.scss';
 import '../../node_modules/leaflet/dist/leaflet.css';
 
@@ -10,9 +11,15 @@ export default class App {
     constructor() {
         this.month = moment().month() + 1;
         this.year = moment().year();
+        this.schedule = {
+            garbage: null,
+            recycle: null,
+            bulk:    null
+        }
         this.point = null;
         this.map = null;
         this.layers = {};
+        this.calendar = new Cal('calendar', this);;
         this.panel = new Panel(this);
         this.geocoder = new Geocoder('geocoder', this);
         this.initialLoad(this);
@@ -94,6 +101,9 @@ export default class App {
             fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
             .then((res) => {
                 res.json().then(data => {
+                    _app.schedule.garbage = data.next_pickups.trash.next_pickup;
+                    _app.schedule.recycle = data.next_pickups.recycling.next_pickup;
+                    _app.schedule.bulk = data.next_pickups.bulk.next_pickup;
                     _app.panel.location.lat = tempLocation.lat;
                     _app.panel.location.lng = tempLocation.lng;
                     _app.panel.data = data;
@@ -116,6 +126,10 @@ export default class App {
                 console.log(error);
             });
         });
+    }
+
+    createCalendar(ev, _app){
+        _app.calendar.createCalendar(_app);
     }
 
     checkParcelValid(parcel){
