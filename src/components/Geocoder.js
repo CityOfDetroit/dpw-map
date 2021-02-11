@@ -83,7 +83,6 @@ export default class Geocoder {
                         if(city.features.length){
                             geocoder._controller.panel.createErrorMsg(geocoder._controller.panel);
                             let parcel = null;
-                            let location;
                             data.candidates.forEach((item) => {
                                 if(item.attributes.User_fld !== ''){
                                     if(geocoder._controller.checkParcelValid(item.attributes.User_fld)){
@@ -91,7 +90,7 @@ export default class Geocoder {
                                     }
                                 }
                             });
-                            (parcel == null) ? location = data.candidates[0].location : location = null;
+                            (parcel == null) ? parcel = data.candidates[0] : 0;
                             let point = turf.point([parcel.location.x, parcel.location.y]);
                             geocoder._controller.panel.address = parcel.address;
                             geocoder._controller.queryLayer(geocoder._controller, 'wasteRoutes',point);
