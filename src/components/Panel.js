@@ -90,6 +90,32 @@ export default class Panel {
         document.querySelector('#app .panel').className = "panel active";
     }
 
+    checkRecyclingStatus(data){
+        let yardStart = null;
+        let yardEnd = null;
+        data.details.forEach((item)=>{
+          if(item.type == 'start-date' && item.service == 'yard waste'){
+            if(item.normalDay != null){
+              yardStart = item.normalDay;
+            }else{
+              yardStart = item.newDay;
+            }
+          }
+          if(item.type == 'end-date' && item.service == 'yard waste'){
+            if(item.normalDay != null){
+              yardEnd = item.normalDay;
+            }else{
+              yardEnd = item.newDay;
+            }
+          }
+        });
+        if(moment(data.next_pickups['yard waste'].next_pickup).isBetween(yardStart, yardEnd)){
+          return true;
+        }else{
+          return false;
+        }
+    }
+
     buildNextPickup(_panel){
         return `
         <section class="waste-services">
@@ -109,7 +135,7 @@ export default class Panel {
             <span class="header">BULK</span>
             <p>${moment(_panel.data.next_pickups.bulk.next_pickup).format('dddd - MMM Do')}</p>
         </div>
-        ${(_panel.data.next_pickups['yard waste']) ? `
+        ${(_panel.checkRecyclingStatus(_panel.data)) ? `
         <div class="group">
             <span class="header">YARD</span>
             <p>${moment(_panel.data.next_pickups['yard waste'].next_pickup).format('dddd - MMM Do')}</p>
