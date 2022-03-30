@@ -13,10 +13,12 @@ export default class Panel {
         this.currentProvider = null;
         this.providers = {
             gfl : {
+                name: 'GFL',
                 url: 'http://gflusa.com/residential/detroit/',
                 phone: '<a href="tel:844-464-3587">(844) 464-3587</a>'
             },
             advance: {
+                name: 'WM',
                 url: 'https://www.advanceddisposal.com/mi/detroit/detroit-residential-collection',
                 phone: '<a href="tel:844-233-8764">(844) 233-8764</a>'
             }
@@ -107,7 +109,7 @@ export default class Panel {
         <section class="waste-services">
         <div class="group">
             <span class="header">PROVIDER</span>
-            <p><a href="${_panel.providers[_panel.currentProvider].url}" target="_blank">${_panel.currentProvider}</a> - ${_panel.providers[_panel.currentProvider].phone}</p>
+            <p><a href="${_panel.providers[_panel.currentProvider].url}" target="_blank">${_panel.providers[_panel.currentProvider].name}</a> - ${_panel.providers[_panel.currentProvider].phone}</p>
         </div>
         <div class="group">
             <span class="header">GARBAGE</span>
