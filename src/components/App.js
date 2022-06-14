@@ -35,7 +35,7 @@ export default class App {
             detectRetina: true
         }).addTo(_app.map);
         _app.layers['wasteRoutes'] = esri.featureLayer({
-            url: 'https://gis.detroitmi.gov/arcgis/rest/services/DPW/2019Services/MapServer/0',
+            url: 'https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/WasteCollectionAreas/FeatureServer/0',
             simplifyFactor: 0.5,
             precision: 5,
             style: function (feature) {
