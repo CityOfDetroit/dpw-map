@@ -120,10 +120,10 @@ export default class App {
                     _app.panel.location.lng = tempLocation.lng;
                     _app.panel.data = data;
                     if(needAdress){
-                        fetch(`https://gis.detroitmi.gov/arcgis/rest/services/DoIT/StreetCenterlineLatLng/GeocodeServer/reverseGeocode?location=${_app.panel.location.lng}%2C+${_app.panel.location.lat}&distance=&outSR=&f=pjson`)
+                        fetch(`https://opengis.detroitmi.gov/opengis/rest/services/BaseUnits/BaseUnitGeocoder/GeocodeServer/reverseGeocode?location=${_app.panel.location.lng}%2C+${_app.panel.location.lat}&distance=&outSR=&f=pjson`)
                         .then((res) => {
                             res.json().then(data => {
-                                _app.panel.address = data.address.Street;
+                                _app.panel.address = data.address.Address;
                                 _app.panel.createPanel(_app.panel);
                             });
                         }).catch((error) => {
