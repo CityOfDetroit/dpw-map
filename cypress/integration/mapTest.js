@@ -17,6 +17,6 @@ describe('Test map functionality', () => {
       cy.contains('Find My Home:')
       cy.get('#geocoder input').type('1104 military{enter}')
       cy.wait(3000)
-      cy.get('.panel-box h2').contains('1104 Military St, Detroit, 48209')
+      cy.get('.panel-box h2').contains('1104 Military St, Detroit, MI, 48209')
     })
 })
