@@ -165,7 +165,6 @@ export default class Panel {
         });
         document.querySelector('.cal-box').appendChild(btn);
     }
-    
-    
+
 }
 
