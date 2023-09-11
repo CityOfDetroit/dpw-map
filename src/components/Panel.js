@@ -1,6 +1,10 @@
 import moment from 'moment';
 import SignForm from './SignForm';
 import './Panel.scss';
+
+
+
+
 export default class Panel {
     constructor(app) {
         this.app = app;
@@ -24,7 +28,11 @@ export default class Panel {
             }
         };
         this.data = null;
+        
+
     }
+
+
 
     closePanel(ev,_panel){
         let tempClass = ev.target.parentNode.parentNode.className;
@@ -65,25 +73,49 @@ export default class Panel {
         tempPanel.prepend(closeBtn);
         document.querySelector('#app .panel').className = "panel active";
     }
-
+    
+    
     createPanel(_panel){
         let tempPanel = document.querySelector('.panel .panel-box');
-        let closeBtn = document.createElement('button');
-        closeBtn.innerText = 'x';
-        closeBtn.className = 'close-section-btn';
+        let closeBtn = document.createElement('cod-button');
+        
+        function setAttributes(e, attrs) {
+            for(var key in attrs) {
+                e.setAttribute(key, attrs[key]);
+            }
+        }
+        setAttributes(closeBtn, 
+        {"data-primary":"true",
+        "data-disable":"undefined",
+        "data-label":"x",
+        "data-img":"",
+        "data-img-alt":"",
+        "data-icon":"",
+        "data-icon-order":"",
+        "data-icon-size":"",
+        "data-shape":"square",
+        "data-aria-label":"Close",
+        "data-background-color":"primary",
+        "data-extra-classes":"fw-bold"});
+        closeBtn.style.position = "absolute"; 
+        closeBtn.style.right = "1em"; 
+        closeBtn.style.top = ".25em"; 
+        document.querySelector('.panel-box').appendChild(closeBtn);
+
         closeBtn.addEventListener("click", function(e){
             e.preventDefault();
             _panel.closePanel(e, _panel);
-        });
-        
+        });   
+
+       
         let nextPickups = _panel.buildNextPickup(_panel);
         tempPanel.innerHTML = `
-            <h2>${_panel.address}</h2>
-            <section class="sms-signup-box">
-            </section>
-            <section class="cal-box">
-            </section>
-            ${nextPickups}
+        <h2>${_panel.address}</h2>
+        <section class="sms-signup-box">
+        </section>
+        <section class="cal-box">
+        </section>
+        ${nextPickups}
         `;
         _panel.buildCaledarSection(_panel);
         tempPanel.prepend(closeBtn);
@@ -91,7 +123,7 @@ export default class Panel {
         document.querySelector('.panel .panel-box .sms-signup-box').appendChild(_panel.signup.form);
         document.querySelector('#app .panel').className = "panel active";
     }
-
+    
     checkRecyclingStatus(_panel){
         if(_panel.data.next_pickups['yard waste']){
             if(moment(_panel.data.next_pickups['yard waste'].next_pickup).isBetween(_panel.app.schedule.yard.start, _panel.app.schedule.yard.end)){
@@ -103,17 +135,19 @@ export default class Panel {
             return false;
         }
     }
-
+    
     buildNextPickup(_panel){
         return `
+        
         <section class="waste-services">
         <div class="group">
-            <span class="header">PROVIDER</span>
-            <p><a href="${_panel.providers[_panel.currentProvider].url}" target="_blank">${_panel.providers[_panel.currentProvider].name}</a> - ${_panel.providers[_panel.currentProvider].phone}</p>
+        <span class="header">PROVIDER</span>
+        
+        <p><a href="${_panel.providers[_panel.currentProvider].url}" target="_blank">${_panel.providers[_panel.currentProvider].name}</a> - ${_panel.providers[_panel.currentProvider].phone}</p>
         </div>
         <div class="group">
-            <span class="header">GARBAGE</span>
-            <p>${moment(_panel.data.next_pickups.trash.next_pickup).format('dddd - MMM Do')}</p>
+        <span class="header">GARBAGE</span>
+        <p>${moment(_panel.data.next_pickups.trash.next_pickup).format('dddd - MMM Do')}</p>
         </div>
         <div class="group">
             <span class="header">CURBSIDE RECYCLE</span>

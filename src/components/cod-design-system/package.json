@@ -1,0 +1,98 @@
+{
+  "name": "@cityofdetroit/cod-design-system",
+  "version": "0.0.1",
+  "description": "City of Detroit design system",
+  "main": "dist/index.js",
+  "repository": "https://github.com/jedgar1mx/COD-Design-System",
+  "keywords": [
+    "components",
+    "web components",
+    "webpack",
+    "javascript",
+    "css",
+    "design system",
+    "storybook"
+  ],
+  "bugs": {
+    "url": "https://github.com/jedgar1mx/COD-Design-System/issues"
+  },
+  "homepage": "https://github.com/jedgar1mx/COD-Design-System#readme",
+  "scripts": {
+    "build": "webpack --mode production",
+    "build-package": "cross-env BABEL_ENV=production babel src -d dist",
+    "start": "webpack-dev-server --mode development",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public",
+    "test-storybook": "test-storybook"
+  },
+  "author": "Edgar Montes",
+  "license": "MIT",
+  "dependencies": {
+    "@turf/simplify": "^5.1.5",
+    "@turf/turf": "^5.1.6",
+    "maplibre-gl": "^2.4.0",
+    "terraformer-arcgis-parser": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.15.8",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-react-inline-elements": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-typescript": "^7.21.0",
+    "@babel/runtime": "^7.15.4",
+    "@storybook/addon-a11y": "^6.5.16",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-coverage": "^0.0.8",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/jest": "^0.0.10",
+    "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/test-runner": "^0.9.4",
+    "@storybook/testing-library": "^0.0.13",
+    "@storybook/web-components": "^6.5.16",
+    "@svgr/webpack": "^5.5.0",
+    "auto": "^10.43.0",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "concurrently": "^7.0.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.5.0",
+    "css-minimizer-webpack-plugin": "^3.4.1",
+    "cypress": "^9.5.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "jest": "27",
+    "lit-html": "^2.6.1",
+    "mini-css-extract-plugin": "^2.5.3",
+    "postcss": "^8.4.21",
+    "postcss-loader": "^7.0.2",
+    "postcss-preset-env": "^8.0.1",
+    "raw-loader": "^4.0.2",
+    "sass": "^1.43.4",
+    "sass-loader": "^12.3.0",
+    "start-server-and-test": "^1.14.0",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.2.4",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.61.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
+  },
+  "browserslist": "> 0.25%, not dead",
+  "babel": {
+    "presets": [
+      [
+        "preset-env",
+        {
+          "absoluteRuntime": false
+        }
+      ]
+    ]
+  },
+  "private": false
+}
