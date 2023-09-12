@@ -3,8 +3,6 @@ import SignForm from './SignForm';
 import './Panel.scss';
 
 
-
-
 export default class Panel {
     constructor(app) {
         this.app = app;

@@ -1,9 +1,0 @@
-{
-    "baseUrl": "http://localhost:3000",
-    "defaultCommandTimeout": 100000,
-    "projectId": "local-services-lookup",
-    "pageLoadTimeout": 100000,
-    "video": false,
-    "videoUploadOnPasses": false,
-    "includeShadowDom": true
-  }
