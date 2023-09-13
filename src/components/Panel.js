@@ -93,7 +93,7 @@ export default class Panel {
         "data-icon-size":"",
         "data-shape":"square",
         "data-aria-label":"Close",
-        "data-background-color":"primary",
+        "data-background-color":"danger",
         "data-extra-classes":"fw-bold"});
         closeBtn.style.position = "absolute"; 
         closeBtn.style.right = "1em"; 
@@ -162,39 +162,14 @@ export default class Panel {
         </div></sections>` : ``}
         `;
     }
-    
 
-     buildCaledarSection(_panel) {
-        let btn = document.createElement('cod-button');
-    
-        // Define an object with attribute-value pairs
-        const attributes = {
-            'data-primary': 'true',
-            'data-disable': 'undefined',
-            'data-label': 'MY SCHEDULE',
-            'data-img': '',
-            'data-img-alt': '',
-            'data-icon': 'calendar',
-            'data-icon-order': 'left',
-            'data-icon-size': 'small',
-            'data-shape': 'fluid',
-            'data-aria-label': '',
-            'data-background-color': 'primary',
-            'data-size': 'lg',
-            'data-extra-classes': 'w-100'
-        };
-    
-        // Iterate over the attributes object and set them on the button element
-
-        for(const [attr, value] of Object.entries(attributes)){
-            btn.setAttribute(attr, value);
-        }
-    
-        btn.addEventListener('click', (ev) => {
+    buildCaledarSection(_panel){
+        let btn = document.createElement('button');
+        btn.innerHTML = `<i class="far fa-calendar-alt"></i> MY SCHEDULE`;
+        btn.className = 'cal-btn';
+        btn.addEventListener('click', (ev)=>{
             _panel.app.createCalendar(ev, _panel.app);
         });
         document.querySelector('.cal-box').appendChild(btn);
     }
-
 }
-
