@@ -13,7 +13,6 @@
     "test": "start-server-and-test start http://localhost:3000 cy:run"
   },
   "dependencies": {
-    "@cityofdetroit/cod-design-system": "^0.0.1",
     "@fullcalendar/core": "^5.10.1",
     "@fullcalendar/daygrid": "^5.10.1",
     "@turf/turf": "^5.1.6",
