@@ -4,6 +4,7 @@ import moment from 'moment';
 import Panel from './Panel';
 import Geocoder from './Geocoder';
 import Cal from './Cal';
+import { buildWasteAPI } from '../utils/WasteAPI';
 import './App.scss';
 import '../../node_modules/leaflet/dist/leaflet.css';
 
@@ -93,7 +94,8 @@ export default class App {
             }
             _app.map.flyTo(tempLocation, 15);
             _app.panel.currentProvider = featureCollection.features[0].properties.contractor;
-            fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
+            const wasteAPIEndpoint = buildWasteAPI(featureCollection.features[0].properties.FID, _app.year, _app.month);
+            fetch(wasteAPIEndpoint)
             .then((res) => {
                 res.json().then(data => {
                     _app.panel.location.lat = tempLocation.lat;
