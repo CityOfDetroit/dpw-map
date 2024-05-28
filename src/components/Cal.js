@@ -63,7 +63,7 @@ export default class Cal {
   fetchPickups(info, successCb, failureCb, pickupType, routeNum, eventBuilder) {
     const month = info.start.getMonth() + 1;
     const wasteAPIEndpoint = buildWasteAPI(routeNum, info.start.getFullYear(), month);
-    fetch(wasteAPIEndpoint)
+    fetch(wasteAPIEndpoint, {'cache': 'force-cache'})
     .then((res) => {
       res.json().then((data) => {
         const events = eventBuilder(data, pickupType);
