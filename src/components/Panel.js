@@ -122,18 +122,8 @@ export default class Panel {
         document.querySelector('#app .panel').className = "panel active";
     }
     
-    checkRecyclingStatus(_panel){
-        if(_panel.data.next_pickups['yard waste']){
-            if(moment(_panel.data.next_pickups['yard waste'].next_pickup).isBetween(_panel.app.schedule.yard.start, _panel.app.schedule.yard.end)){
-                return true;
-            }else{
-                return false;
-            }
-        }else{
-            return false;
-        }
-    }
-    
+    // TODO: Stop using next_pickups from API:
+    // https://github.com/CityOfDetroit/dpw-map/issues/53
     buildNextPickup(_panel){
         return `
         
@@ -155,7 +145,7 @@ export default class Panel {
             <span class="header">BULK</span>
             <p>${moment(_panel.data.next_pickups.bulk.next_pickup).format('dddd - MMM Do')}</p>
         </div>
-        ${(_panel.checkRecyclingStatus(_panel)) ? `
+        ${('yard waste' in _panel.data.next_pickups) ? `
         <div class="group">
             <span class="header">YARD</span>
             <p>${moment(_panel.data.next_pickups['yard waste'].next_pickup).format('dddd - MMM Do')}</p>
