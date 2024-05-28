@@ -18,6 +18,7 @@ export default class App {
         this.calendar = new Cal('calendar', this);;
         this.panel = new Panel(this);
         this.geocoder = new Geocoder('geocoder', this);
+        this.routeNum = null;
         this.initialLoad(this);
     }
 
@@ -94,7 +95,8 @@ export default class App {
             }
             _app.map.flyTo(tempLocation, 15);
             _app.panel.currentProvider = featureCollection.features[0].properties.contractor;
-            const wasteAPIEndpoint = buildWasteAPI(featureCollection.features[0].properties.FID, _app.year, _app.month);
+            _app.routeNum = featureCollection.features[0].properties.FID;
+            const wasteAPIEndpoint = buildWasteAPI(_app.routeNum, _app.year, _app.month);
             fetch(wasteAPIEndpoint)
             .then((res) => {
                 res.json().then(data => {

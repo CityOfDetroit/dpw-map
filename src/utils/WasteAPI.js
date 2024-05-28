@@ -9,4 +9,18 @@ function buildWasteAPI(routeNum, year, month) {
   return `https://apis.detroitmi.gov/waste_schedule/details/${routeNum}/year/${year}/month/${month}/`;
 }
 
-export {buildWasteAPI};
+const PICKUP_TYPES = Object.freeze({
+  TRASH:      "trash",
+  RECYCLING:  "recycling",
+  BULK:       "bulk",
+  YARD_WASTE: "yard waste"
+});
+
+const PICKUP_TYPES_PRINT = Object.freeze({
+  "trash": "Trash",
+  "recycling": "Recycling",
+  "bulk": "Bulk",
+  "yard waste": "Yard Waste"
+});
+
+export {buildWasteAPI, PICKUP_TYPES, PICKUP_TYPES_PRINT};
