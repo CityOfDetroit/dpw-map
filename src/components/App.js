@@ -4,6 +4,7 @@ import moment from 'moment';
 import Panel from './Panel';
 import Geocoder from './Geocoder';
 import Cal from './Cal';
+import { buildWasteAPI } from '../utils/WasteAPI';
 import './App.scss';
 import '../../node_modules/leaflet/dist/leaflet.css';
 
@@ -11,21 +12,13 @@ export default class App {
     constructor() {
         this.month = moment().month() + 1;
         this.year = moment().year();
-        this.schedule = {
-            garbage: null,
-            recycle: null,
-            bulk:    null,
-            yard: {
-                start: null,
-                end: null
-            }
-        }
         this.point = null;
         this.map = null;
         this.layers = {};
         this.calendar = new Cal('calendar', this);;
         this.panel = new Panel(this);
         this.geocoder = new Geocoder('geocoder', this);
+        this.routeNum = null;
         this.initialLoad(this);
     }
 
@@ -102,20 +95,11 @@ export default class App {
             }
             _app.map.flyTo(tempLocation, 15);
             _app.panel.currentProvider = featureCollection.features[0].properties.contractor;
-            fetch(`https://apis.detroitmi.gov/waste_schedule/details/${featureCollection.features[0].properties.FID}/year/${_app.year}/month/${_app.month}/`)
+            _app.routeNum = featureCollection.features[0].properties.FID;
+            const wasteAPIEndpoint = buildWasteAPI(_app.routeNum, _app.year, _app.month);
+            fetch(wasteAPIEndpoint)
             .then((res) => {
                 res.json().then(data => {
-                    data.details.forEach((d)=>{
-                        if(d.type == 'start-date' && d.service == 'yard waste'){
-                            _app.schedule.yard.start = d.newDay;
-                        }
-                        if(d.type == 'end-date' && d.service == 'yard waste'){
-                            _app.schedule.yard.end = d.newDay;
-                        }
-                    });
-                    _app.schedule.garbage = data.next_pickups.trash.next_pickup;
-                    _app.schedule.recycle = data.next_pickups.recycling.next_pickup;
-                    _app.schedule.bulk = data.next_pickups.bulk.next_pickup;
                     _app.panel.location.lat = tempLocation.lat;
                     _app.panel.location.lng = tempLocation.lng;
                     _app.panel.data = data;
