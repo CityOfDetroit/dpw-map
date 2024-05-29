@@ -22,7 +22,7 @@ export default class Cal {
     calContainer.id = 'calendar';
     tempCal.innerHTML = `
       <article class='cal-legend'>
-        <span class="garbage">Garbage</span> 
+        <span class="garbage">Garbage</span>
         <span class="recycle">Recycle</span> 
         <span class="bulk">Bulk</span> 
         <span class="yard">Yard</span> 

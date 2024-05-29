@@ -17,10 +17,10 @@ const PICKUP_TYPES = Object.freeze({
 });
 
 const PICKUP_TYPES_PRINT = Object.freeze({
-  "trash": "Trash",
-  "recycling": "Recycling",
+  "trash": "Garbage",
+  "recycling": "Recycle",
   "bulk": "Bulk",
-  "yard waste": "Yard Waste"
+  "yard waste": "Yard"
 });
 
 export {buildWasteAPI, PICKUP_TYPES, PICKUP_TYPES_PRINT};
