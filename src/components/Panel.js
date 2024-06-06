@@ -15,9 +15,9 @@ export default class Panel {
         this.currentProvider = null;
         this.providers = {
             gfl : {
-                name: 'GFL',
-                url: 'http://gflusa.com/residential/detroit/',
-                phone: '<a href="tel:844-464-3587">(844) 464-3587</a>'
+                name: 'Priority Waste',
+                url: 'mailto:DetroitLDC@prioritywaste.com',
+                phone: '<a href="tel:855-927-8365">(855) 927-8365</a>'
             },
             advance: {
                 name: 'WM',
