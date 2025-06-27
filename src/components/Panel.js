@@ -164,8 +164,9 @@ export default class Panel {
     
         // Define an object with attribute-value pairs
         const attributes = {
-            'data-primary': 'true',
+            'variant': 'primary',
             'size': 'large',
+            'class': 'view-calendar-btn',
         };
         // TODO: Use cod-icon once stable.
         btn.innerHTML = `<svg slot="prefix" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
