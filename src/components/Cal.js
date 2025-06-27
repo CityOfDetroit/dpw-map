@@ -163,8 +163,7 @@ export default class Cal {
     
     const calendarElement = document.querySelector('#app .calendar');
     if (calendarElement) {
-      // Remove 'active' class to close the calendar
-      calendarElement.className = calendarElement.className.replace(/\s*active\s*/, '').trim() || 'calendar';
+      calendarElement.classList.remove('active');
     }
     
     // Clear calendar content

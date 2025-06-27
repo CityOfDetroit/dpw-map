@@ -36,8 +36,7 @@ export default class Panel {
         // Find the panel element
         const panelElement = document.querySelector('#app .panel');
         if (panelElement) {
-            // Remove 'active' class to close the panel
-            panelElement.className = panelElement.className.replace(/\s*active\s*/, '').trim() || 'panel';
+            panelElement.classList.remove('active');
         }
         
         // Reset map view
