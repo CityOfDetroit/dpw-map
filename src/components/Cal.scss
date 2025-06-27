@@ -64,18 +64,11 @@ $cubic: cubic-bezier(.64,.09,.08,1);
         }
     }
 
-    button.close-section-btn{
+    cod-button.close-section-btn{
         position: absolute;
         top: .25em;
         right: .25em;
         padding: .5em .9em;
-        border: none;
-        font-size: 1.25em;
-        border-radius: 50%;    
-        background-color: $color-4;
-        color: $white;
-        font-weight: bold;
-        cursor: pointer;
     }
 }
 
