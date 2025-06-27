@@ -32,6 +32,7 @@ export default class Cal {
     closeBtn.className = 'close-section-btn';
     closeBtn.addEventListener("click", function(e){
         e.preventDefault();
+        e.stopPropagation(); // Prevent event bubbling
         _app.calendar.closeCalendar(e, _app.calendar);
     });
     let calContainer = document.createElement('article');
@@ -153,18 +154,29 @@ export default class Cal {
     return events;
   }
 
-  closeCalendar(ev,_calendar){
-    _calendar.calendar.destroy();
-    _calendar.calendar = null;
-    let tempClass = ev.target.parentNode.parentNode.className;
-    tempClass = tempClass.split(' ');
-    ev.target.parentNode.parentNode.className = tempClass[0];
-    try {
-        while (ev.target.parentNode.firstChild) {
-            ev.target.parentNode.removeChild(ev.target.parentNode.firstChild);
+  closeCalendar(ev, _calendar){
+    // Destroy the calendar instance first
+    if (_calendar.calendar) {
+      _calendar.calendar.destroy();
+      _calendar.calendar = null;
+    }
+    
+    const calendarElement = document.querySelector('#app .calendar');
+    if (calendarElement) {
+      // Remove 'active' class to close the calendar
+      calendarElement.className = calendarElement.className.replace(/\s*active\s*/, '').trim() || 'calendar';
+    }
+    
+    // Clear calendar content
+    const calendarBox = document.querySelector('.calendar .calendar-box');
+    if (calendarBox) {
+      try {
+        while (calendarBox.firstChild) {
+          calendarBox.removeChild(calendarBox.firstChild);
         }
-    } catch (error) {
-        
+      } catch (error) {
+        console.error('Error clearing calendar content:', error);
+      }
     }
   }
 }
