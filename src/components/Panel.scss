@@ -45,20 +45,11 @@ $cubic: cubic-bezier(.64,.09,.08,1);
         .cal-box{
             margin-bottom: 1em;
 
-            .cal-btn{
-                border: none;
-                padding: 1em .5em;
-                background: $color-1;
-                color: $white;
+            cod-button {
                 width: 100%;
-                font-weight: bold;
-                cursor: pointer;
-                border-radius: 0;
-            }
-            
-            .cal-btn:hover{
-                background-color: $color-2;
-                color: $color-1;
+                &.view-calendar-btn::part(base) {
+                    width: 100%;
+                }
             }
         }
     }

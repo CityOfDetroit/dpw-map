@@ -32,17 +32,26 @@ export default class Panel {
 
 
 
-    closePanel(ev,_panel){
-        let tempClass = ev.target.parentNode.parentNode.className;
-        tempClass = tempClass.split(' ');
-        ev.target.parentNode.parentNode.className = tempClass[0];
+    closePanel(ev, _panel){
+        // Find the panel element
+        const panelElement = document.querySelector('#app .panel');
+        if (panelElement) {
+            panelElement.classList.remove('active');
+        }
+        
+        // Reset map view
         _panel.app.map.flyTo([42.36, -83.1], 12);
-        try {
-            while (ev.target.parentNode.firstChild) {
-                ev.target.parentNode.removeChild(ev.target.parentNode.firstChild);
+        
+        // Clear panel content
+        const panelBox = document.querySelector('.panel .panel-box');
+        if (panelBox) {
+            try {
+                while (panelBox.firstChild) {
+                    panelBox.removeChild(panelBox.firstChild);
+                }
+            } catch (error) {
+                console.error('Error clearing panel content:', error);
             }
-        } catch (error) {
-            
         }
     }
 
@@ -53,7 +62,7 @@ export default class Panel {
         closeBtn.className = 'close-section-btn';
         closeBtn.addEventListener("click", function(e){
             e.preventDefault();
-            _panel.closePanel(e);
+            _panel.closePanel(e, _panel);
         });
         tempPanel.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="100" height="70" viewBox="0 0 100 68">
@@ -83,29 +92,26 @@ export default class Panel {
             }
         }
         setAttributes(closeBtn, 
-        {"data-primary":"true",
-        "data-disable":"undefined",
-        "data-label":"x",
-        "data-img":"",
-        "data-img-alt":"",
-        "data-icon":"",
-        "data-icon-order":"",
-        "data-icon-size":"",
-        "data-shape":"square",
-        "data-aria-label":"Close",
-        "data-background-color":"danger",
-        "data-extra-classes":"fw-bold"});
+            {
+                "variant":"danger",
+                "square":"",
+                "label":"Close"
+            }
+        );
         closeBtn.style.position = "absolute"; 
         closeBtn.style.right = "1em"; 
         closeBtn.style.top = ".25em"; 
-        document.querySelector('.panel-box').appendChild(closeBtn);
+        closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+        </svg>`;
 
         closeBtn.addEventListener("click", function(e){
             e.preventDefault();
+            e.stopPropagation(); // Prevent event bubbling
             _panel.closePanel(e, _panel);
         });   
 
-       
         let nextPickups = _panel.buildNextPickup(_panel);
         tempPanel.innerHTML = `
         <h2>${_panel.address}</h2>
@@ -158,20 +164,16 @@ export default class Panel {
     
         // Define an object with attribute-value pairs
         const attributes = {
-            'data-primary': 'true',
-            'data-disable': 'undefined',
-            'data-label': 'MY SCHEDULE',
-            'data-img': '',
-            'data-img-alt': '',
-            'data-icon': 'calendar',
-            'data-icon-order': 'left',
-            'data-icon-size': 'small',
-            'data-shape': 'fluid',
-            'data-aria-label': '',
-            'data-background-color': 'primary',
-            'data-size': 'lg',
-            'data-extra-classes': 'w-100'
+            'variant': 'primary',
+            'size': 'large',
+            'class': 'view-calendar-btn',
         };
+        // TODO: Use cod-icon once stable.
+        btn.innerHTML = `<svg slot="prefix" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
+            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+        </svg>`;
+        btn.appendChild(document.createTextNode('View Calendar'));
     
         // Iterate over the attributes object and set them on the button element
 
